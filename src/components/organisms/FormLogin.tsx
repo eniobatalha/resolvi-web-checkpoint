@@ -43,29 +43,24 @@ const FormLogin: React.FC = () => {
 
   const auth = getAuth();
 
+  const provider = new GoogleAuthProvider();
+
   const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
+    await signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
 
-      if (token && user) {
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("authUser", JSON.stringify(user));
-        router.push("/home"); // Redireciona para a página principal
-      }
-    } catch (error) {
-      console.error("Erro ao logar com o Google:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível fazer login com o Google.",
-        variant: "destructive",
+        const user = result.user;
+        console.log("user: " + user);
+        console.log("token: " + token)
+
+        router.push("/home")
+      }).catch((error) => {
+        console.log(error)
       });
-    }
-  };
-
+  }
 
   const loginWithEmail = async () => {
     await signInWithEmailAndPassword(auth, email, password)
@@ -126,15 +121,15 @@ const FormLogin: React.FC = () => {
       <CardHeader>
         <CardTitle className="text-4xl font-bold">
           {isLoggingIn ? (
-            "Verifique seu email"
+              "Verifique seu email"
           ) : step === 1 ? (
-            <>
-              Fazer <span className="text-indigo-900">Login</span>
-            </>
+              <>
+                Fazer <span className="text-indigo-900">Login</span>
+              </>
           ) : (
-            <>
-              Insira <span className="text-indigo-900">sua senha</span>
-            </>
+              <>
+                Insira <span className="text-indigo-900">sua senha</span>
+              </>
           )}
         </CardTitle>
 

@@ -2,11 +2,8 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
-import { FaHome } from "react-icons/fa";
-import { BsChatLeftText } from "react-icons/bs";
-import { MdMoreHoriz } from "react-icons/md";
+import Menu from "@/components/organisms/Menu";
 import { FiSearch } from "react-icons/fi";
-import { Button } from "@/components/ui/button";
 import HeroSection from "@/components/organisms/HeroSection";  // Importando o HeroSection
 import TagsPopulares from "@/components/organisms/TagsPopulares";
 import MenuCategoria from "@/components/organisms/MenuCategoria";  // Importando MenuCategoria
@@ -15,7 +12,7 @@ import DownloadAppSection from "@/components/organisms/DownloadAppSection";
 import InsetHome1 from "@/components/organisms/InsetHome";
 import ServicesSection from "@/components/organisms/ServicesSection";
 import Footer from "@/components/organisms/Footer";
-import withAuth from "@/hoc/withAuth";
+import ModalInfoOrder from "@/components/modalnfoOrder/ModalInfoOrder";
 
 const HomePage = () => {
     return (
@@ -29,17 +26,7 @@ const HomePage = () => {
             {/* Divisão da página */}
             <div className="flex min-h-screen">
                 {/* Menu lateral flutuante */}
-                <aside className="w-16 h-fit bg-gray-900 text-white flex flex-col items-center py-4 space-y-4 fixed top-1/2 transform -translate-y-1/2 rounded-xl shadow-lg ml-4 z-50">
-                    <Button className="p-3 hover:bg-indigo-800">
-                        <FaHome size={20} />
-                    </Button>
-                    <Button className="p-3 hover:bg-indigo-800">
-                        <BsChatLeftText size={20} />
-                    </Button>
-                    <Button className="p-3 hover:bg-indigo-800">
-                        <MdMoreHoriz size={20} />
-                    </Button>
-                </aside>
+                <Menu />
 
 
                 {/* Conteúdo principal */}
@@ -67,6 +54,7 @@ const HomePage = () => {
                                 <h1 className="text-3xl font-bold text-gray-900">Principais serviços pedidos</h1>
                                 <h2 className="text-xl text-gray-900 mt-2">Os serviços mais realizados de cada
                                     categoria</h2>
+                                <ModalInfoOrder/>
                             </div>
 
                             {/* Componente de Carousel de Profissionais */}
