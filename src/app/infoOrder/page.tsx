@@ -5,6 +5,9 @@ import Menu from "@/components/organisms/MenuAside";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
 import Footer from "@/components/organisms/Footer";
+import {FaMapPin} from "react-icons/fa";
+import {CarouselWorkers} from "@/components/organisms/CarouselWorkers";
+import InsetHome1 from "@/components/organisms/InsetHome";
 
 const InfoOrder = () => {
     return (
@@ -13,7 +16,7 @@ const InfoOrder = () => {
             <div className="flex min-h-screen">
                 <Menu/>
 
-                <div className="flex w-full h-lvh flex-col items-center py-8">
+                <div className="flex w-full flex-col items-center py-8">
                     <Avatar className="w-[320px] h-[320px]">
                         <AvatarImage src="https://p2.trrsf.com/image/fget/cf/1200/900/middle/images.terra.com/2023/06/15/programadora-us3i6jqikoxk.jpg" />
                         <AvatarFallback>Resolvi</AvatarFallback>
@@ -21,8 +24,15 @@ const InfoOrder = () => {
 
                     <h2 className="font-bold text-indigo-900 text-[40px] pt-4">Programador React JS</h2>
                     <div className="flex justify-center items-center gap-10 bg-indigo-900 w-full h-12">
-                        <span className="text-green-500 text-[24px] font-bold">R$ 20/H</span>
-                        <span className="text-white text-[24px]">🗺 Recife</span>
+                        <div className="flex items-center gap-10">
+                            <span className="text-green-500 text-[24px] font-bold">R$ 40/H</span>
+                            <span className="text-white text-[24px]">Aventure inc</span>
+                            <div className="flex items-center">
+                                <FaMapPin className="text-white"/>
+                                <span className="text-white text-[24px]">Recife</span>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div className="w-1/2 pt-8">
@@ -74,6 +84,12 @@ const InfoOrder = () => {
                         >
                             Voltar
                         </Button>
+                    </div>
+
+                    <div className="flex flex-col items-center py-10">
+                        <h1 className="text-3xl font-bold text-gray-900">Confira também</h1>
+                        <InsetHome1/>
+
                     </div>
                 </div>
 
