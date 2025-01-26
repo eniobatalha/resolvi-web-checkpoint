@@ -13,10 +13,12 @@ import InsetHome1 from "@/components/organisms/InsetHome";
 import ServicesSection from "@/components/organisms/ServicesSection";
 import Footer from "@/components/organisms/Footer";
 import ModalInfoOrder from "@/components/modalnfoOrder/ModalInfoOrder";
+import ProtectedRoutes from "../ProtectedRoutes";
+
 
 const HomePage = () => {
     return (
-        <>
+        <ProtectedRoutes>
             {/* Menu fixo no topo */}
             <MenuCompleto />
 
@@ -118,7 +120,7 @@ const HomePage = () => {
                 </main>
             </div>
             <Footer />
-        </>
+        </ProtectedRoutes>
     );
 };
 

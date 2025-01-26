@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,73 +7,103 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "../../../firebaseinitialize";
-import { FcGoogle } from "react-icons/fc";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import axiosInstance from "../../../axiosInstance";
+import axios from "axios";
 
 const FormRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [phone, setPhone] = useState<string>(""); // Sem +55 no campo
+  const [cpf, setCpf] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(true);
   const { toast } = useToast();
   const router = useRouter();
 
-  initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  const loginWithGoogle = async () => {
-    await signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
-        console.log("user: " + user);
-        console.log("token: " + token);
-        router.push("/home");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  // Máscara de telefone
+  const formatPhone = (value: string) => {
+    const rawValue = value.replace(/\D/g, ""); // Remove tudo que não for número
+    const phoneFormatted = rawValue
+      .replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3") // Aplica a máscara
+      .replace(/^(\(\d{2}\) \d{4,5}-\d{0,4}).*/, "$1"); // Limita o tamanho
+    return phoneFormatted;
   };
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  // Remove máscara de telefone para envio
+  const getRawPhone = (value: string) => "+55" + value.replace(/\D/g, ""); // Adiciona +55 ao número limpo
+
+  // Máscara de CPF
+  const formatCpf = (value: string) => {
+    const rawValue = value.replace(/\D/g, ""); // Remove tudo que não for número
+    return rawValue
+      .replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4") // Aplica a máscara
+      .replace(/^(\d{3}\.\d{3}\.\d{3}-\d{2}).*/, "$1"); // Limita o tamanho
+  };
+
+  // Remove máscara de CPF para envio
+  const getRawCpf = (value: string) => value.replace(/\D/g, "");
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      setError("Campos vazios.");
+    if (!name || !email || !password || !phone || !birthday || !cpf) {
       toast({
         title: "Erro",
-        description: "Por favor, preencha todos os campos.",
+        description: "Por favor, preencha todos os campos obrigatórios.",
         variant: "destructive",
       });
+      return;
     }
 
-    registerUser();
-    router.push("/login");
-  };
-
-  const registerUser = async () => {
-    const userInfo = { name, email, password, phone };
+    // Prepara os dados sem máscara para envio
+    const userInfo = {
+      name,
+      email,
+      password,
+      phone: getRawPhone(phone), // Remove a máscara do telefone e adiciona +55
+      cpf: getRawCpf(cpf), // Remove a máscara do CPF
+      birthday,
+      profilePic: "string", // Valor estático
+    };
 
     try {
-      console.log(userInfo);
-      await axiosInstance.post("/Users", userInfo);
-    } catch (error) {
-      console.error("Erro ao criar usuario:", error);
+      const response = await axios.post("http://localhost:8080/api/client/register", userInfo);
+
+      if (response.status === 200) {
+        toast({
+          title: "Sucesso",
+          description: "Registro realizado com sucesso! Recarregando a página...",
+          variant: "default",
+        });
+
+        setTimeout(() => {
+          window.location.reload(); // Recarrega a página
+        }, 2000);
+      }
+    } catch (error: any) {
+      console.error("Erro ao registrar:", error);
+
+      if (error.response?.data?.details?.includes("EMAIL_EXISTS")) {
+        toast({
+          title: "Erro",
+          description: "Esse e-mail já foi usado em um outro registro.",
+          variant: "destructive",
+        });
+      } else if (error.response?.data?.details?.includes("PHONE_NUMBER_EXISTS")) {
+        toast({
+          title: "Erro",
+          description: "Esse telefone já foi usado em um outro registro.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao processar seu registro. Tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      }
     }
   };
-
-  // Validações de senha
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
 
   return (
     <Card className="w-full bg-white max-w-lg mx-auto p-6">
@@ -82,103 +113,97 @@ const FormRegister: React.FC = () => {
       <CardContent>
         <form onSubmit={handleRegisterSubmit} className="space-y-4">
           <div>
-            <div>
-              <Label htmlFor="nome" className="text-base font-medium">
-                Nome
-              </Label>
-              <Input
-                id="nome"
-                placeholder="Digite seu nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className={`w-full ${error ? "border-[#FF6E71]" : ""}`}
-              />
-              {error && <p className="text-sm border-[#FF6E71]">{error}</p>}
-            </div>
-            <div className="mt-4">
-              <Label htmlFor="phone" className="text-base font-medium">
-                Telefone
-              </Label>
-              <Input
-                id="phone"
-                placeholder="Digite seu telefone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className={`w-full ${error ? "border-[#FF6E71]" : ""}`}
-              />
-              {error && <p className="text-sm border-[#FF6E71]">{error}</p>}
-            </div>
+            <Label htmlFor="name" className="text-base font-medium">
+              Nome
+            </Label>
+            <Input
+              id="name"
+              placeholder="Digite seu nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full"
+            />
+          </div>
 
-            <div className="mt-4">
-              <Label htmlFor="email" className="text-base font-medium">
-                Email
-              </Label>
-              <Input
-                type="email"
-                id="email"
-                placeholder="Digite seu email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`w-full ${error ? "border-[#FF6E71]" : ""}`}
-              />
-              {error && <p className="text-sm border-[#FF6E71]">{error}</p>}
-            </div>
+          <div>
+            <Label htmlFor="phone" className="text-base font-medium">
+              Telefone
+            </Label>
+            <Input
+              id="phone"
+              placeholder="(XX) XXXXX-XXXX"
+              value={phone}
+              onChange={(e) => setPhone(formatPhone(e.target.value))}
+              className="w-full"
+            />
+          </div>
 
-            <div className="relative mt-4 mb-4">
-              <Label htmlFor="password" className="text-base font-medium">
-                Senha
-              </Label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  placeholder="Digite sua senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full ${error ? "border-[#FF6E71]" : ""}`}
-                />
-                <div
-                  className="absolute top-2/4 right-3 -translate-y-2/4 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                </div>
-              </div>
-              <div style={{ fontSize: "10px", fontWeight: "bold" }} className="mt-2">
-                <p>Sua senha deve conter: </p>
-                <ul>
-                  <li style={{ color: hasSpecialChar ? "#56CA00" : "#FF6E71" }}>
-                    {hasSpecialChar ? "Um caracter especial ✔" : "Um caracter especial"}
-                  </li>
-                  <li style={{ color: hasUppercase ? "#56CA00" : "#FF6E71" }}>
-                    {hasUppercase ? "Uma letra maiúscula ✔" : "Uma letra maiúscula"}
-                  </li>
-                  <li style={{ color: hasNumber ? "#56CA00" : "#FF6E71" }}>
-                    {hasNumber ? "Um número ✔" : "Um número"}
-                  </li>
-                </ul>
+          <div>
+            <Label htmlFor="cpf" className="text-base font-medium">
+              CPF
+            </Label>
+            <Input
+              id="cpf"
+              placeholder="XXX.XXX.XXX-XX"
+              value={cpf}
+              onChange={(e) => setCpf(formatCpf(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="email" className="text-base font-medium">
+              Email
+            </Label>
+            <Input
+              type="email"
+              id="email"
+              placeholder="Digite seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="password" className="text-base font-medium">
+              Senha
+            </Label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Digite sua senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full"
+              />
+              <div
+                className="absolute top-2/4 right-3 -translate-y-2/4 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "🙈" : "👁️"}
               </div>
             </div>
           </div>
-          <Button
-            disabled={
-              !hasNumber || 
-              !hasUppercase || 
-              !hasSpecialChar
-            }
-            type="submit"
-            variant="indigo"
-            className="w-full"
-          >
+
+          <div>
+            <Label htmlFor="birthday" className="text-base font-medium">
+              Data de Nascimento
+            </Label>
+            <Input
+              type="date"
+              id="birthday"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+              className="w-full"
+            />
+          </div>
+
+          <Button type="submit" variant="indigo" className="w-full">
             Registrar
           </Button>
         </form>
-        <>
-          <Button className="w-full mt-4" onClick={() => loginWithGoogle()}>
-            <FcGoogle />
-            Criar conta com Google
-          </Button>
-        </>
       </CardContent>
     </Card>
   );

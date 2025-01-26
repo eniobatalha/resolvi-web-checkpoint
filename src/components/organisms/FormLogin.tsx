@@ -1,6 +1,5 @@
 "use client";
-// import Lottie from 'react-lottie';
-// import Verify from '../../../../src/lotttie/verify.json'
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,235 +7,285 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { initializeApp } from "firebase/app";
 import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { FiArrowLeft } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import firebaseConfig from "../../../firebaseinitialize";
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-
-// const defaultOptions = {
-//     loop: true,
-//     autoplay: true,
-//     animationData: Verify,
-//     rendererSettings: {
-//         preserveAspectRatio: "xMidYMid slice"
-//     }
-// };
 
 const FormLogin: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-  //const [checked, setChecked] = useState<boolean>(false);
-  const [step, setStep] = useState<number>(1); // 1 for email, 2 for password
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false); // Estado para controle de transição
+  const [email, setEmail] = useState<string>(""); // E-mail digitado
+  const [password, setPassword] = useState<string>(""); // Senha digitada
+  const [error, setError] = useState<string>(""); // Mensagem de erro
+  const [step, setStep] = useState<number>(1); // 1 para e-mail, 2 para senha
   const { toast } = useToast();
   const router = useRouter();
 
   initializeApp(firebaseConfig);
-
   const auth = getAuth();
-
   const provider = new GoogleAuthProvider();
 
   const loginWithGoogle = async () => {
-    await signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
+    try {
+      // Faz a autenticação com o Google
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-        const user = result.user;
-        console.log("user: " + user);
-        console.log("token: " + token)
+      // Obtém o accessToken do Firebase
+      const accessToken = await user.getIdToken();
 
-        router.push("/home")
-      }).catch((error) => {
-        console.log(error)
+      console.log("Firebase AccessToken:", accessToken);
+
+      // Faz a requisição para o endpoint correto
+      const userInfo = await fetchUserWithGoogle(accessToken);
+
+      // Salva as informações no localStorage
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("name", userInfo.name);
+      localStorage.setItem("email", userInfo.email);
+      localStorage.setItem("role", userInfo.role);
+
+      toast({
+        title: "Login bem-sucedido",
+        description: "Redirecionando para a página inicial...",
+        variant: "default",
       });
-  }
 
-  const loginWithEmail = async () => {
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        console.log(user)
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage)
-      });
-  }
-
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
-      setError("Email de usuário não encontrado.");
+      // Redireciona de acordo com a role
+      if (userInfo.role === "Client") {
+        router.push("/home");
+      } else if (userInfo.role === "Worker") {
+        router.push("/home-worker");
+      }
+    } catch (error) {
+      console.error("Erro ao autenticar ou buscar usuário com Google:", error);
       toast({
         title: "Erro",
-        description: "Por favor, insira um email válido.",
+        description: "Ocorreu um erro ao autenticar com o Google.",
         variant: "destructive",
       });
-    } else {
-      if (email == "aluno@gmail.com") {
-        setError("Email já cadastrado em nosso sistema.");
-        toast({
-          title: "Erro",
-          description: "Por favor, insira um email válido.",
-          variant: "destructive",
-        });
-      } else {
-        setError("");
-        // Aqui você faria a verificação do e-mail na base de dados
-        setIsTransitioning(true); // Começa a transição
-        setTimeout(() => {
-          setStep(2); // Avança para o próximo passo
-          setIsTransitioning(false); // Finaliza a transição
-        }, 300); // Duração da transição
-      }
     }
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("email: " + email)
-    console.log("senha: " + password)
-    //setIsLoggingIn(true);
-    loginWithEmail();
+  // Função para buscar informações do usuário no endpoint Google
+  const fetchUserWithGoogle = async (token: string) => {
+    try {
+      const response = await fetch("http://localhost:8080/api/client/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar ou criar usuário com Google.");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Erro ao buscar ou criar usuário com Google:", error);
+      throw error;
+    }
   };
 
+
+
+  // Função para autenticação com Firebase usando e-mail e senha
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      toast({
+        title: "Erro",
+        description: "Preencha todos os campos para continuar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Pega o accessToken do Firebase
+      const token = await user.getIdToken();
+
+      console.log("Firebase AccessToken:", token);
+
+      // Etapa adicional: Obter informações do usuário a partir do token
+      const userInfo = await fetchUserInfo(token);
+
+      // Salvar informações no localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", userInfo.name);
+      localStorage.setItem("email", userInfo.email);
+      localStorage.setItem("role", userInfo.role);
+
+      toast({
+        title: "Login bem-sucedido",
+        description: "Redirecionando para a página inicial...",
+        variant: "default",
+      });
+
+      router.push("/home");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro",
+        description: "E-mail ou senha incorretos.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Função para buscar informações do usuário no endpoint
+  const fetchUserInfo = async (token: string) => {
+    try {
+      const response = await fetch("http://localhost:8080/api/client/login-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Usuário não encontrado.");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const createUser = async (user: any) => {
+    try {
+      console.log("Payload enviado para o registro do usuário:", user); // Log do payload enviado
+
+      const response = await fetch("http://localhost:8080/api/client/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.text(); // Captura os detalhes do erro
+        console.error("Erro na resposta do servidor:", errorDetails);
+        throw new Error("Erro ao criar usuário.");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      throw error;
+    }
+  };
+
+
+  // Voltar para o estado de e-mail
+  const handleBackToEmail = () => {
+    setStep(1);
+    setPassword(""); // Limpa a senha ao voltar
+    setError(""); // Limpa mensagens de erro
+  };
+
+  // Avançar para o estado de senha
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      setError("Por favor, insira um e-mail válido.");
+      return;
+    }
+
+    // Apenas avança para o próximo estado
+    setStep(2);
+    setError("");
+  };
 
   return (
     <Card className="w-full bg-white max-w-lg mx-auto p-6">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold">
-          {isLoggingIn ? (
-              "Verifique seu email"
-          ) : step === 1 ? (
-              <>
-                Fazer <span className="text-indigo-900">Login</span>
-              </>
-          ) : (
-              <>
-                Insira <span className="text-indigo-900">sua senha</span>
-              </>
-          )}
-        </CardTitle>
-
-      </CardHeader>
-      <CardContent>
-        {isLoggingIn ? (
-          <div>
-            <div className="mx-auto p-6 relative">
-              <div className="absolute bottom-3 left-20 z-10">
-                {/* {checked &&
-
-                                    <Lottie
-                                        options={defaultOptions}
-                                        height={80}
-                                        width={80}
-                                    />
-                                } */}
-              </div>
-              <InputOTP maxLength={6}>
-                <InputOTPGroup className="gap-4">
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
+        <div className="flex items-center space-x-2">
+          {step === 2 && (
             <Button
-              type="submit"
-              variant="default"
-              className="w-full"
-            //onClick={() => setChecked(true)}
+              variant="ghost"
+              onClick={handleBackToEmail}
+              className="p-0 text-gray-600"
             >
-              Continuar
+              <FiArrowLeft size={32} />
             </Button>
-          </div>
-        ) : (
-          <form
-            onSubmit={step === 1 ? handleEmailSubmit : handlePasswordSubmit}
-            className="space-y-4"
-          >
-            <div
-              className={`transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"
-                }`}
-            >
-              {step === 1 && (
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-base font-medium">
-                    Endereço de email
-                  </Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    placeholder="Digite seu email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full ${error ? "border-red-500" : ""}`}
-                  />
-                  {error && <p className="text-sm text-red-500">{error}</p>}
-                </div>
-              )}
-              {step === 2 && (
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-base font-medium">
-                    Digite sua senha
-                  </Label>
-                  <Input
-                    type="password"
-                    id="password"
-                    placeholder="Digite sua senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`w-full ${error ? "border-red-500" : ""}`}
-                  />
-                  <div className="flex justify-end">
-                    <Button
-                      variant="link"
-                      onClick={() => {
-                        // Redireciona para a página de recuperação de senha
-                        router.push("/forgot-password");
-                      }}
-                      className="text-sm p-0 text-primary"
-                    >
-                      Esqueci minha senha
-                    </Button>
-                  </div>
-                </div>
-              )}
+          )}
+          <CardTitle className="text-4xl font-bold">
+            {step === 1 ? "Fazer Login" : "Insira sua senha"}
+          </CardTitle>
+        </div>
+      </CardHeader>
 
+      <CardContent>
+        {step === 1 ? (
+          // Formulário de e-mail
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-base font-medium">
+                Endereço de email
+              </Label>
+              <Input
+                type="email"
+                id="email"
+                placeholder="Digite seu email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full ${error ? "border-red-500" : ""}`}
+              />
+              {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
             <Button type="submit" variant="indigo" className="w-full">
-              {step === 1 ? "Continuar" : "Acessar"}
+              Continuar
             </Button>
-
           </form>
-
+        ) : (
+          // Formulário de senha
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-base font-medium">
+                Digite sua senha
+              </Label>
+              <Input
+                type="password"
+                id="password"
+                placeholder="Digite sua senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full ${error ? "border-red-500" : ""}`}
+              />
+              {error && <p className="text-sm text-red-500">{error}</p>}
+            </div>
+            <Button type="submit" variant="indigo" className="w-full">
+              Acessar
+            </Button>
+          </form>
         )}
-        <>
-          <Button
-            className="w-full mt-4"
-            // onClick={() => alert("Login com Google")}
-            onClick={() => loginWithGoogle()}
-          >
-            <FcGoogle />
-            Continue com Google
-          </Button>
-        </>
+        {/* Botão para Login com Google */}
+        <Button
+          className="w-full mt-4"
+          onClick={loginWithGoogle}
+        >
+          <FcGoogle className="mr-2" />
+          Continue com Google
+        </Button>
       </CardContent>
     </Card>
   );
