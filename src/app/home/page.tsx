@@ -9,7 +9,7 @@ import ProtectedRoutes from "../ProtectedRoutes";
 
 const HomePage = () => {
     // Mova o useState para dentro do componente
-    const [user, setUser] = React.useState(false);
+    const [user, setUser] = React.useState(true);
 
     return (
         <ProtectedRoutes>
