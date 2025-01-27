@@ -3,7 +3,7 @@ import { FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="text-white bg-[#16161b] h-[550px] pt-[32px] flex flex-col mt-auto">
+        <footer className="text-white bg-[#16161b] h-[45rem] md:h-[43rem] lg:h-[37rem] pt-[32px] flex flex-col mt-auto">
             <div className="flex justify-between items-center w-full px-[168px] h-20 border-b-[1px]">
                 <div>
                     <h2 className="font-bold text-4xl">
@@ -57,7 +57,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full px-[168px] mt-[32px]">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full px-[168px] mt-[32px] mb-8">
                 <div>
                     <h4 className="text-[32px] font-bold">Principais Serviços</h4>
                     <ul>
