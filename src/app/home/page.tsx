@@ -4,6 +4,7 @@ import Footer from "@/components/organisms/Footer";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import MenuCategoria from "@/components/organisms/MenuCategoria";
 import HomeUserNormal from "@/components/organisms/HomeUserNormal";
+import HomeProfessional from "@/components/organisms/HomeProfessional";
 
 const HomePage = () => {
     // Mova o useState para dentro do componente
@@ -14,7 +15,7 @@ const HomePage = () => {
             <div>
                 <MenuCompleto />
                 <MenuCategoria />
-                {user ? <HomeUserNormal /> : <p>aaaa</p>}
+                {user ? <HomeUserNormal /> : <HomeProfessional/>}
             </div>
 
             <Footer />
