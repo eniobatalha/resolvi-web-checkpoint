@@ -15,7 +15,6 @@ const FormRegisterProfessional: React.FC = () => {
     const [phone, setPhone] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [specialty, setSpecialty] = useState<string>("");
     const [cnpj, setCnpj] = useState<string>("");
     const [categories, setCategories] = useState<string[]>([]);
     const { toast } = useToast();
@@ -137,7 +136,6 @@ const FormRegisterProfessional: React.FC = () => {
     const isEmailButtonDisabled = !!error || !email.includes("@");
     const isNextButtonDisabled = !name || !phone;
     const isPasswordButtonDisabled = !password || !confirmPassword;
-    const isSpecialtyButtonDisabled = !specialty;
 
     return (
         <Card className="w-full bg-white max-w-lg mx-auto py-10 px-6">
@@ -229,40 +227,6 @@ const FormRegisterProfessional: React.FC = () => {
                 )}
 
                 {step === 3 && (
-                    <form onSubmit={() => setStep(4)} className="space-y-4">
-                        <Label htmlFor="specialty" className="text-base font-medium">
-                            Selecione sua área de especialidade
-                        </Label>
-                        <select
-                            id="specialty"
-                            value={specialty}
-                            onChange={(e) => setSpecialty(e.target.value)}
-                            className="w-full border rounded-md p-2"
-                        >
-                            <option value="" disabled>
-                                Selecione uma especialidade
-                            </option>
-                            {categories.map((category) => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
-                            ))}
-                        </select>
-                        <Button
-                            disabled={isSpecialtyButtonDisabled}
-                            type="submit"
-                            variant="indigo"
-                            className="w-full"
-                        >
-                            Continuar
-                        </Button>
-                        <Button variant="ghost" onClick={handleBack} className="w-full">
-                            Voltar
-                        </Button>
-                    </form>
-                )}
-
-                {step === 4 && (
                     <form onSubmit={handleRegister} className="space-y-4">
                         <div>
                             <Label htmlFor="password" className="text-base font-medium">
