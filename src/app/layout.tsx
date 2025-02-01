@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { League_Spartan } from "next/font/google"; // Importa a fonte League Spartan
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${leagueSpartan.className} antialiased`}
       >
-        {children}
+        <ProtectedRoutes>{children}</ProtectedRoutes>
         <Toaster />
       </body>
     </html>
