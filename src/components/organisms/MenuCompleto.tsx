@@ -1,21 +1,46 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaSignInAlt } from "react-icons/fa"; // Ícone de login
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const MenuCompleto: React.FC = () => {
   const router = useRouter();
 
-  const user = {
-    nome: "Resolvi App",
-    email: "resolvi@app.com",
-    avatarUrl: "", // URL da imagem do avatar, deixe vazio para fallback
+  const [user, setUser] = useState({
+    nome: "Usuário",
+    email: "",
+    avatarUrl: "",
+  });
+
+  // Carrega os dados do usuário do localStorage
+  useEffect(() => {
+    const nome = localStorage.getItem("name") || "Usuário";
+    const email = localStorage.getItem("email") || "";
+    const avatarUrl = ""; // Você pode adicionar lógica para avatar no futuro
+    setUser({ nome, email, avatarUrl });
+  }, []);
+
+  const handleLogout = () => {
+    // Remove informações do localStorage e redireciona para login
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("name");
+    localStorage.removeItem("role");
+
+    router.push("/login");
   };
 
   return (
@@ -43,12 +68,40 @@ const MenuCompleto: React.FC = () => {
         >
           Como funciona?
         </a>
-        <a
-          href="/"
-          className="flex items-center text-indigo-500 font-semibold hover:text-indigo-900"
-        >
-          <FaSignInAlt className="mr-2" /> Entrar
-        </a>
+
+        {/* Avatar com Dropdown Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="cursor-pointer">
+              <AvatarImage src={user.avatarUrl} alt={user.nome} />
+              <AvatarFallback>
+                {user.nome.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-white text-black w-64">
+            {/* Informações do Usuário */}
+            <DropdownMenuLabel className="flex flex-col items-start">
+              <span className="text-black text-base font-bold">{user.nome}</span>
+              <span className="text-gray-500 text-sm">{user.email}</span>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            {/* Opções do Menu */}
+            <DropdownMenuItem onClick={() => router.push("/gerenciar-dados")}>
+              Gerenciar Dados
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/gerenciar-endereco")}>
+              Gerenciar Endereço
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/gerenciar-pagamento")}>
+              Gerenciar Formas de Pagamento
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </nav>
     </div>
   );

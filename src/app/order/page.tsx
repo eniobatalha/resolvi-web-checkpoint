@@ -2,12 +2,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
-import { FaHome } from "react-icons/fa";
-import { BsChatLeftText } from "react-icons/bs";
-import { MdMoreHoriz } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
-import { Button } from "@/components/ui/button";
-import HeroSection from "@/components/organisms/HeroSection";  // Importando o HeroSection
 import TagsPopulares from "@/components/organisms/TagsPopulares";
 import Menu from "@/components/organisms/MenuAside";  // Importando MenuCategoria
 import { CarouselWorkers } from "@/components/organisms/CarouselWorkers";

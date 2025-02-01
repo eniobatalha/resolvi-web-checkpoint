@@ -11,61 +11,141 @@ const FormRegisterProfessional: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [step, setStep] = useState<number>(1);
-    const [nome, setNome] = useState<string>("");
-    const [celular, setCelular] = useState<string>("");
-    const [cep, setCep] = useState<string>("");
-    const [especialidade, setEspecialidade] = useState<string>("");
+    const [name, setName] = useState<string>("");
+    const [phone, setPhone] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [cnpj, setCnpj] = useState<string>("");
+    const [categories, setCategories] = useState<string[]>([]);
     const { toast } = useToast();
     const router = useRouter();
-
-    const emailValidation = (email: string) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        if (email === "") return "";
-        if (email.length >= 8 && !email.includes('@')) return "O e-mail precisa conter o símbolo '@'.";
-        if (!email.match(emailRegex)) return "Por favor, insira um e-mail válido.";
-
-        const validDomainsPattern = /@(gmail\.com|outlook\.com|hotmail\.com|gmail\.[a-z]+|outlook\.[a-z]+|hotmail\.[a-z]+)$/;
-        if (!validDomainsPattern.test(email)) {
-            return "Por favor, insira um e-mail com domínio válido (gmail.com, outlook.com, hotmail.com ou similares).";
-        }
-        return "";
-    };
-
-    const handleEmailSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setStep(2);
-    };
-
-    const handleNextStep = (e: React.FormEvent) => {
-        e.preventDefault();
-        setStep(3);
-    };
-
-    const handleConclude = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Especialidade selecionada:", especialidade);
-        router.push("/conclusion"); // Exemplo de redirecionamento final
-    };
 
     useEffect(() => {
         const validationError = emailValidation(email);
         setError(validationError);
     }, [email]);
 
-    const isEmailButtonDisabled = !!error || !email.includes('@');
-    const isNextButtonDisabled = !nome || !celular || !cep;
-    const isConcludeButtonDisabled = !especialidade;
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const emailValidation = (email: string) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (email === "") return "";
+        if (email.length >= 8 && !email.includes("@"))
+            return "O e-mail precisa conter o símbolo '@'.";
+        if (!email.match(emailRegex))
+            return "Por favor, insira um e-mail válido.";
+        return "";
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/category");
+            const data = await response.json();
+            const categoryNames = data.map((category: { name: string }) => category.name);
+            setCategories(categoryNames);
+        } catch (error) {
+            console.error("Erro ao buscar categorias:", error);
+            toast({
+                title: "Erro",
+                description: "Não foi possível carregar as categorias.",
+                variant: "destructive",
+            });
+        }
+    };
+
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            toast({
+                title: "Erro",
+                description: "As senhas não coincidem.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Formatar o telefone com "+55" no início
+        const formattedPhone = `+55${phone.replace(/\D/g, "")}`;
+
+        const payload = {
+            name,
+            email,
+            phone: formattedPhone,
+            password,
+            cnpj: cnpj || "",
+        };
+
+        try {
+            const response = await fetch("http://localhost:8080/api/worker/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                toast({
+                    title: "Sucesso",
+                    description: "Cadastro realizado com sucesso.",
+                    variant: "default",
+                });
+
+                router.push("/login");
+            } else {
+                const errorData = await response.json(); // Extrai os detalhes do erro do servidor
+                if (errorData?.details?.includes("EMAIL_EXISTS")) {
+                    toast({
+                        title: "Erro",
+                        description: "Esse e-mail já foi usado em um outro registro.",
+                        variant: "destructive",
+                    });
+                } else if (errorData?.details?.includes("PHONE_NUMBER_EXISTS")) {
+                    toast({
+                        title: "Erro",
+                        description: "Esse telefone já foi usado em um outro registro.",
+                        variant: "destructive",
+                    });
+                } else {
+                    toast({
+                        title: "Erro",
+                        description: "Ocorreu um erro ao registrar o profissional. Tente novamente mais tarde.",
+                        variant: "destructive",
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Erro ao registrar profissional:", error);
+            toast({
+                title: "Erro",
+                description: "Ocorreu um erro inesperado ao registrar o profissional.",
+                variant: "destructive",
+            });
+            console.log("Payload:", payload);
+        }
+
+    };
+
+    const handleBack = () => {
+        setStep((prev) => Math.max(prev - 1, 1));
+    };
+
+    const isEmailButtonDisabled = !!error || !email.includes("@");
+    const isNextButtonDisabled = !name || !phone;
+    const isPasswordButtonDisabled = !password || !confirmPassword;
 
     return (
         <Card className="w-full bg-white max-w-lg mx-auto py-10 px-6">
             <CardContent>
                 <CardTitle className="text-4xl font-bold">
-                    Resolva ser <span className="text-indigo-900 font-bold pt-4">profissional</span>
+                    Resolva ser <span className="text-indigo-900 font-bold">profissional</span>
                 </CardTitle>
 
                 {step === 1 && (
-                    <form onSubmit={handleEmailSubmit} className="space-y-4">
+                    <form onSubmit={() => setStep(2)} className="space-y-4">
                         <div>
                             <Label htmlFor="email" className="text-base font-medium">
                                 Insira seu melhor e-mail
@@ -79,19 +159,6 @@ const FormRegisterProfessional: React.FC = () => {
                                 className={`w-full ${error ? "border-red-500" : ""}`}
                             />
                             {error && email.length >= 8 && <p className="text-sm text-red-500">{error}</p>}
-                            <div className="mt-4">
-                                <p className="text-sm text-gray-600">
-                                    <span className="text-indigo-900 font-bold">Dica</span>: Utilize um e-mail
-                                    profissional
-                                    para criar a sua conta. Não
-                                    utilize:
-                                </p>
-                                <ul className="list-disc pl-5 text-sm text-gray-600">
-                                    <li>Um nick de jogo;</li>
-                                    <li>Apelidos;</li>
-                                    <li>Gírias.</li>
-                                </ul>
-                            </div>
                         </div>
                         <Button
                             disabled={isEmailButtonDisabled}
@@ -104,51 +171,46 @@ const FormRegisterProfessional: React.FC = () => {
                     </form>
                 )}
 
-                {
-                    step === 2 && (
-                        <form onSubmit={handleNextStep} className="space-y-4">
-                            <div>
-                                <Label htmlFor="nome" className="text-base font-medium">
-                                    Nome
-                                </Label>
-                                <Input
+                {step === 2 && (
+                    <form onSubmit={() => setStep(3)} className="space-y-4">
+                        <div>
+                            <Label htmlFor="name" className="text-base font-medium">
+                                Nome
+                            </Label>
+                            <Input
                                 type="text"
-                                id="nome"
+                                id="name"
                                 placeholder="Nome completo"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="w-full"
                             />
                         </div>
                         <div>
-                            <Label htmlFor="celular" className="text-base font-medium">
+                            <Label htmlFor="phone" className="text-base font-medium">
                                 Celular
                             </Label>
                             <Input
                                 type="text"
-                                id="celular"
+                                id="phone"
                                 placeholder="9 9999-9999"
-                                value={celular}
-                                onChange={(e) => setCelular(e.target.value)}
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
                                 className="w-full"
                             />
                         </div>
                         <div>
-                            <Label htmlFor="cep" className="text-base font-medium">
-                                CEP
+                            <Label htmlFor="cnpj" className="text-base font-medium">
+                                CNPJ (opcional)
                             </Label>
                             <Input
                                 type="text"
-                                id="cep"
-                                placeholder="99999-999"
-                                value={cep}
-                                onChange={(e) => setCep(e.target.value)}
+                                id="cnpj"
+                                placeholder="Digite seu CNPJ"
+                                value={cnpj}
+                                onChange={(e) => setCnpj(e.target.value)}
                                 className="w-full"
                             />
-
-                            <div className="mt-2">
-                                <a href="#" target="_blank" className="text-indigo-900 font-bold text-[12px] underline">Não lembra seu CEP?</a>
-                            </div>
                         </div>
                         <Button
                             disabled={isNextButtonDisabled}
@@ -158,37 +220,50 @@ const FormRegisterProfessional: React.FC = () => {
                         >
                             Continuar
                         </Button>
+                        <Button variant="ghost" onClick={handleBack} className="w-full">
+                            Voltar
+                        </Button>
                     </form>
                 )}
 
                 {step === 3 && (
-                    <form onSubmit={handleConclude} className="space-y-4">
-                        <p className="text-base font-medium text-gray-800">
-                            Selecione a área <br /> de sua especialidade
-                        </p>
-                        <div className="space-y-2">
-                            {["Programador", "Pedreiro", "Cozinheiro", "Outros"].map((option) => (
-                                <div key={option}>
-                                    <label className="flex items-center space-x-2">
-                                        <input
-                                            type="radio"
-                                            name="especialidade"
-                                            value={option}
-                                            onChange={(e) => setEspecialidade(e.target.value)}
-                                            className="form-radio"
-                                        />
-                                        <span>{option}</span>
-                                    </label>
-                                </div>
-                            ))}
+                    <form onSubmit={handleRegister} className="space-y-4">
+                        <div>
+                            <Label htmlFor="password" className="text-base font-medium">
+                                Senha
+                            </Label>
+                            <Input
+                                type="password"
+                                id="password"
+                                placeholder="Digite sua senha"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full"
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="confirmPassword" className="text-base font-medium">
+                                Confirmar Senha
+                            </Label>
+                            <Input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirme sua senha"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full"
+                            />
                         </div>
                         <Button
-                            disabled={isConcludeButtonDisabled}
+                            disabled={isPasswordButtonDisabled}
                             type="submit"
                             variant="indigo"
                             className="w-full"
                         >
                             Concluir
+                        </Button>
+                        <Button variant="ghost" onClick={handleBack} className="w-full">
+                            Voltar
                         </Button>
                     </form>
                 )}

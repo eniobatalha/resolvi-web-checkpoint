@@ -17,6 +17,8 @@ import {
 import { FiArrowLeft } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import firebaseConfig from "../../../firebaseinitialize";
+import axios from "axios";
+import axiosInstance from "../../../axiosInstance";
 
 const FormLogin: React.FC = () => {
   const [email, setEmail] = useState<string>(""); // E-mail digitado
@@ -75,23 +77,22 @@ const FormLogin: React.FC = () => {
   // Função para buscar informações do usuário no endpoint Google
   const fetchUserWithGoogle = async (token: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/client/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao buscar ou criar usuário com Google.");
-      }
-
-      const data = await response.json();
-      return data;
+      // Envia o token no corpo da requisição usando axiosInstance
+      const response = await axiosInstance.post("/api/worker/google", { token });
+  
+      // Axios já retorna os dados em response.data
+      return response.data;
+  
     } catch (error) {
       console.error("Erro ao buscar ou criar usuário com Google:", error);
-      throw error;
+      
+      // Se for um erro do Axios, podemos extrair mais detalhes
+      if (axios.isAxiosError(error)) {
+        const serverMessage = error.response?.data?.message || "Erro desconhecido no servidor";
+        throw new Error(`Erro na comunicação com o servidor: ${serverMessage}`);
+      }
+      
+      throw new Error("Erro ao processar autenticação com Google");
     }
   };
 
@@ -122,6 +123,7 @@ const FormLogin: React.FC = () => {
       // Etapa adicional: Obter informações do usuário a partir do token
       const userInfo = await fetchUserInfo(token);
 
+      console.log(userInfo)
       // Salvar informações no localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("name", userInfo.name);
@@ -145,29 +147,25 @@ const FormLogin: React.FC = () => {
     }
   };
 
-  // Função para buscar informações do usuário no endpoint
   const fetchUserInfo = async (token: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/client/login-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      if (!response.ok) {
+      const response = await axiosInstance.post("/api/worker/login-email",{ token });
+  
+      return response.data;
+  
+    } catch (error) {
+      // Tratamento específico para erros HTTP 4xx/5xx
+      if (axios.isAxiosError(error) && error.response) {
         throw new Error("Usuário não encontrado.");
       }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
+      
+      // Mantém o erro original para outros tipos de erros (rede, etc)
       throw error;
     }
   };
 
-  const createUser = async (user: any) => {
+  // funcao nao ultilizada
+  /*const createUser = async (user: any) => {
     try {
       console.log("Payload enviado para o registro do usuário:", user); // Log do payload enviado
 
@@ -191,7 +189,7 @@ const FormLogin: React.FC = () => {
       console.error("Erro ao criar usuário:", error);
       throw error;
     }
-  };
+  };*/
 
 
   // Voltar para o estado de e-mail
