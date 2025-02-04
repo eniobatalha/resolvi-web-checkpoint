@@ -32,7 +32,7 @@ export function CarouselCategory({ categories, handleIdCategoryChange }:Categori
               <Card>
                 <CardContent className="flex items-center justify-center p-6">
                   <span className="text-3xl font-semibold">{category?.name}</span>
-                  <p>{category?.subcategories?.toString()}</p>
+                  {/* <p>{category?.subcategories?.toString()}</p> */}
                 </CardContent>
               </Card>
             </div>
