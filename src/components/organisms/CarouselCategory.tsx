@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/carousel"
 
 interface CategoriesProps {
-  categories: object;
+  categories: [];
   handleIdCategoryChange: (value: string) => void;
 }
 
 export function CarouselCategory({ categories, handleIdCategoryChange }:CategoriesProps) {
+  console.log('categories', categories)
+  
   return (
     <Carousel
       opts={{
@@ -24,12 +26,13 @@ export function CarouselCategory({ categories, handleIdCategoryChange }:Categori
       className="w-full max-w-xs"
     >
       <CarouselContent className="-mt-1 h-[200px]">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {categories.map((category, index) => (
           <CarouselItem key={index} className="pt-1 md:basis-1/2">
             <div className="p-1">
               <Card>
                 <CardContent className="flex items-center justify-center p-6">
-                  <span className="text-3xl font-semibold">{index + 1}</span>
+                  <span className="text-3xl font-semibold">{category?.name}</span>
+                  <p>{category?.subcategories?.toString()}</p>
                 </CardContent>
               </Card>
             </div>
