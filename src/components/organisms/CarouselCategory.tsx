@@ -24,7 +24,7 @@ export function CarouselCategory({
   categories,
   handleCategorySubcategoryChange,
 }: CategoriesProps) {
-  console.log("categories", categories);
+ 
   interface subcateg {
     id: string, 
     name: string
@@ -41,6 +41,10 @@ export function CarouselCategory({
 
   const handleIdSubCategoryChange = (choseSubCategory: any) => {
     setIdSubCategory(choseSubCategory?.id);
+    handleCategorySubcategoryChange({
+      idCategory: idCategory,
+      idSubCategory: idSubCategory
+    })
   };
 
   console.log('idCategory', idCategory)

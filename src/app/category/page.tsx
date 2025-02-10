@@ -33,15 +33,7 @@ interface Category {
 
 const CategoryPage = () => {
   // Mova o useState para dentro do componente
-  const [user, setUser] = React.useState(true);
-  const [name, setName] = useState("João Campus"); // Nome do usuário
-  const [username, setUsername] = useState("@joaocampus"); // Username do usuário
-
   const [categories, setCategories] = useState<Category[]>([]); // Estado local para o nome
-
-  const [address, setAddress] = useState("IFOPE"); // Estado local para o nome
-  const [number, setNumber] = useState("09"); // Estado local para o username
-  const [zipCode, setZipCode] = useState("90878"); // Estado local para o username
 
   // Fetch categories and subcategories on component mount
   useEffect(() => {
@@ -61,10 +53,51 @@ const CategoryPage = () => {
     fetchCategories();
   }, []);
 
+  // Fetch categories and subcategories on component mount
+  // useEffect(() => {
+  //   const fetchAddCategories = async () => {
+     
+  //     let workedId = 0
+  //     try {
+  //       const response = await fetch(`http://localhost:8080/api/worker/${workedId}/addCategory`);
+        
+  //       if (!response.ok) {
+  //         throw new Error("Erro ao buscar categorias.");
+  //       }
+  //       const data: Category[] = await response.json(); // Tipo esperado do endpoint
+  //       setCategories(data);
+  //     } catch (error) {
+  //       console.error("Erro ao carregar categorias:", error);
+  //     }
+  //   };
+
+  //   fetchAddCategories();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchAddSubCategories = async () => {
+
+  //     let workedId = 0
+  //     try {
+  //       const response = await fetch(`http://localhost:8080/api/worker/${workedId}/subcategories`);
+        
+  //       if (!response.ok) {
+  //         throw new Error("Erro ao buscar categorias.");
+  //       }
+  //       const data: Category[] = await response.json(); // Tipo esperado do endpoint
+  //       setCategories(data);
+  //     } catch (error) {
+  //       console.error("Erro ao carregar categorias:", error);
+  //     }
+  //   };
+
+  //   fetchAddSubCategories();
+  // }, []);
+
   // Função para atualizar o username
-  const handleIdCategoryChange = (idCategory: any) => {
-    console.log('first', idCategory)
-    setAddress(idCategory);
+  const handleIdCategoryChange = (category: any) => {
+    console.log('category', category)
+    // setAddress(idCategory);
   };
 
   return (
