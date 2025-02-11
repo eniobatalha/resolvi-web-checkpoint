@@ -95,11 +95,47 @@ const CategoryPage = () => {
   // }, []);
 
   // Função para atualizar o username
-  const handleIdCategoryChange = (idCategory: string, idSubCategory: string) => {
+  const handleCategorySubcategoryChange = (idCategory: string, idSubCategory: string) => {
     console.log('category', idCategory)
     console.log('category', idSubCategory)
+    fetchAddCategories(idCategory)
+    fetchAddSubCategories(idSubCategory)
     // setAddress(idCategory);
   };
+
+      const fetchAddCategories = async (idCategory: string) => {
+        console.log('idCategory add worker', idCategory)
+     
+      let workedId = 0
+      try {
+        const response = await fetch(`http://localhost:8080/api/worker/${workedId}/addCategory`);
+        
+        if (!response.ok) {
+          throw new Error("Erro ao buscar categorias.");
+        }
+        const data: Category[] = await response.json(); // Tipo esperado do endpoint
+        setCategories(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+      const fetchAddSubCategories = async (idsubcategory: string) => {
+        console.log('idsubcategory add worker', idsubcategory)
+
+      let workedId = 0
+      try {
+        const response = await fetch(`http://localhost:8080/api/worker/${workedId}/subcategories`);
+        
+        if (!response.ok) {
+          throw new Error("Erro ao buscar categorias.");
+        }
+        const data: Category[] = await response.json(); // Tipo esperado do endpoint
+        setCategories(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
 
   return (
     <>
@@ -117,7 +153,7 @@ const CategoryPage = () => {
                     </div>
                     <CarouselCategory
                       categories={categories}
-                      handleIdCategoryChange={handleIdCategoryChange}
+                      handleCategorySubcategoryChange={handleCategorySubcategoryChange}
                     />
                   </div>
                 </div>

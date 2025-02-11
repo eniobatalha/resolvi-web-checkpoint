@@ -39,8 +39,9 @@ export function CarouselCategory({
     setSubCategory(choseCategory?.subcategories);
   };
 
-  const handleIdSubCategoryChange = (choseSubCategory: any) => {
-    setIdSubCategory(choseSubCategory?.id);
+  const handleIdSubCategoryChange = (idSubCategory: any) => {
+    setIdSubCategory(idSubCategory);
+    handleCategorySubcategoryChange(idCategory, idSubCategory);
   };
 
   return (
@@ -81,8 +82,7 @@ export function CarouselCategory({
         <CarouselContent className="-mt-1 h-[200px]">
           {subCategory.map((subcategories, index) => (
             <CarouselItem
-              // onClick={() => handleIdSubCategoryChange(subcategories?.id)}
-              onClick={() => handleCategorySubcategoryChange(idCategory, subcategories?.id)}
+              onClick={() => handleIdSubCategoryChange(subcategories?.id)}
               key={index}
               className="pt-1 md:basis-1/2"
             >
