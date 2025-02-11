@@ -95,8 +95,9 @@ const CategoryPage = () => {
   // }, []);
 
   // Função para atualizar o username
-  const handleIdCategoryChange = (category: any, subcategory: any) => {
-    console.log('category', category)
+  const handleIdCategoryChange = (idCategory: string, idSubCategory: string) => {
+    console.log('category', idCategory)
+    console.log('category', idSubCategory)
     // setAddress(idCategory);
   };
 

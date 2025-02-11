@@ -17,7 +17,7 @@ interface subcategories {
 
 interface CategoriesProps {
   categories: { id: string; name: string; subcategories: subcategories[] }[];
-  handleCategorySubcategoryChange: (value: object) => void;
+  handleCategorySubcategoryChange: (idCategory: string, idSubCategory: string) => void;
 }
 
 export function CarouselCategory({
@@ -30,8 +30,8 @@ export function CarouselCategory({
     name: string
   }
 
-  const [idCategory, setIdCategory] = React.useState(0); // Estado local para o nome
-  const [idSubCategory, setIdSubCategory] = React.useState(0); // Estado local para o nome
+  const [idCategory, setIdCategory] = React.useState('0'); // Estado local para o nome
+  const [idSubCategory, setIdSubCategory] = React.useState('0'); // Estado local para o nome
   const [subCategory, setSubCategory] = React.useState<subcateg[]>([]); // Estado local para o nome
 
   const handleIdCategoryChange = (choseCategory: any) => {
@@ -41,13 +41,7 @@ export function CarouselCategory({
 
   const handleIdSubCategoryChange = (choseSubCategory: any) => {
     setIdSubCategory(choseSubCategory?.id);
-    handleCategorySubcategoryChange({
-      idCategory: idCategory,
-      idSubCategory: idSubCategory
-    })
   };
-
-  console.log('idCategory', idCategory)
 
   return (
     <Carousel
@@ -57,7 +51,7 @@ export function CarouselCategory({
       orientation="vertical"
       className="w-full max-w-xs"
     >
-      {idCategory == 0 ? 
+      {idCategory == '0' ? 
       <CarouselContent className="-mt-1 h-[200px]">
           {categories.map((category, index) => 
             <CarouselItem
@@ -87,7 +81,8 @@ export function CarouselCategory({
         <CarouselContent className="-mt-1 h-[200px]">
           {subCategory.map((subcategories, index) => (
             <CarouselItem
-              onClick={() => handleIdSubCategoryChange(subcategories?.id)}
+              // onClick={() => handleIdSubCategoryChange(subcategories?.id)}
+              onClick={() => handleCategorySubcategoryChange(idCategory, subcategories?.id)}
               key={index}
               className="pt-1 md:basis-1/2"
             >
