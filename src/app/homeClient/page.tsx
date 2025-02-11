@@ -18,7 +18,7 @@ const HomePage = () => {
                 <div>
                     <MenuCompleto />
                     <MenuCategoria />
-                    {user ? <HomeUserNormal /> : <HomeProfessional />}
+                    <HomeUserNormal/>
                 </div>
 
                 <Footer />
