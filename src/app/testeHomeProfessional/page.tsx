@@ -5,12 +5,9 @@ import {Input} from "@/components/ui/input";
 import TagsPopulares from "@/components/organisms/TagsPopulares";
 import {CarouselWorkers} from "@/components/organisms/CarouselWorkers";
 import DownloadAppSection from "@/components/organisms/DownloadAppSection";
-import InsetHome1 from "@/components/organisms/InsetHome";
-import ServicesSection from "@/components/organisms/ServicesSection";
 import React from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import Footer from "@/components/organisms/Footer";
-import CardJobs from "@/components/organisms/CardJobs";
 import TipsProfessional from "@/components/organisms/TipsProfessional";
 
 
@@ -54,7 +51,7 @@ const TesteHome = () => {
                         <div className="flex justify-evenly items-center py-5">
                             <img src="/img/workes-profile.jpg" className="w-[30%]" alt="Profissional Resolvi"/>
                             <div className="h-[50vh] flex flex-col justify-center">
-                                <h1 className="text-6xl text-indigo-900">
+                                <h1 className="text-6xl text-black">
                                     Benefícios de trabalhar com a <span className="text-indigo-900 font-bold">Resolvi</span>
                                 </h1>
                                 <p className="text-lg text-gray-700 mt-4">
@@ -72,8 +69,8 @@ const TesteHome = () => {
                         {/* Pedidos Frequentes */}
                         <div>
                             <div className="text-center">
-                                <h1 className="text-3xl font-bold text-indigo-900">Pedidos mais frequentes</h1>
-                                <h2 className="text-xl text-gray-900 mt-2">Mais de 30 pedidos realizados por dia</h2>
+                                <h1 className="text-3xl font-bold text-indigo-900">Serviços em até 20km de você</h1>
+                                <h2 className="text-xl text-gray-900 mt-2">teste app zap color</h2>
                             </div>
                             <CarouselWorkers/>
                         </div>
@@ -82,7 +79,7 @@ const TesteHome = () => {
                         <div className="py-6 mb-4 flex flex-col justify-between items-center">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Dicas para profissionais</h1>
-                                <h2 className="text-xl text-gray-900 mt-2">Aprenda a se destacar e aumentar suas chances de ser contratado</h2>
+                                <h2 className="text-xl text-gray-900 my-2">Aprenda a se destacar e aumentar suas chances de ser contratado</h2>
                             </div>
                             <div className="flex flex-col gap-4">
                                 <TipsProfessional

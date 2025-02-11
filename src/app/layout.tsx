@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { League_Spartan } from "next/font/google"; // Importa a fonte League Spartan
+import { League_Spartan } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -24,6 +24,7 @@ const leagueSpartan = League_Spartan({
 export const metadata: Metadata = {
   title: "Resolvi",
   description: "Seu problema resolvido!",
+  icons: '/img/favicon.ico' 
 };
 
 export default function RootLayout({
