@@ -15,7 +15,7 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
     pathname.startsWith("/profile") ||
     pathname.startsWith("/order");
 
-  useEffect(() => {
+/*  useEffect(() => {
     const token = localStorage.getItem("token"); // O token correto
     const role = localStorage.getItem("role"); // A role do usuário
 
@@ -33,7 +33,7 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
         }
       }
     }
-  }, [pathname, router]);
+  }, [pathname, router]);*/
 
   return <>{children}</>;
 };
