@@ -17,14 +17,14 @@ const geistMono = localFont({
 });
 
 const leagueSpartan = League_Spartan({
-  subsets: ["latin"], // Adicione os subconjuntos necessários
-  weight: ["400", "700"], // Ajuste os pesos conforme necessário
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Resolvi",
   description: "Seu problema resolvido!",
-  icons: '/img/favicon.ico' 
+  icons: '/img/favicon.ico'
 };
 
 export default function RootLayout({

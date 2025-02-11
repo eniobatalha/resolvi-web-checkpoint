@@ -70,7 +70,6 @@ const TesteHome = () => {
                         <div>
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Serviços em até 20km de você</h1>
-                                <h2 className="text-xl text-gray-900 mt-2">teste app zap color</h2>
                             </div>
                             <CarouselWorkers/>
                         </div>
