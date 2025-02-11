@@ -10,6 +10,7 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   // Define quais rotas são protegidas
   const isProtectedRoute =
     pathname.startsWith("/home") ||
+    pathname.startsWith("/category") ||
     pathname.startsWith("/info") ||
     pathname.startsWith("/profile") ||
     pathname.startsWith("/order");
@@ -25,6 +26,7 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
       } else {
         // Redireciona baseado na role
         if (pathname.startsWith("/home") && role === "Worker") {
+          router.push("/category"); // Redireciona se for worker
           router.push("/home-worker"); // Redireciona se for worker
         } else if (pathname.startsWith("/home-worker") && role === "Client") {
           router.push("/home"); // Redireciona se for client
