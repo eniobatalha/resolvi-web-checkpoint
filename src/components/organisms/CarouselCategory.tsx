@@ -17,7 +17,7 @@ interface subcategories {
 
 interface CategoriesProps {
   categories: { id: string; name: string; subcategories: subcategories[] }[];
-  handleCategorySubcategoryChange: (value: any) => void;
+  handleCategorySubcategoryChange: (value: object) => void;
 }
 
 export function CarouselCategory({
