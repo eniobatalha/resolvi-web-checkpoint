@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -10,36 +11,33 @@ import {
 
 export function CarouselWorkers() {
   return (
-      <div className="flex items-center justify-center p-4">
-        <Carousel className="w-full max-w-4xl">
-          <CarouselContent className="-ml-2">
+      <div className="flex items-center justify-center">
+        <Carousel className="w-full max-w-3xl py-6">
+          <CarouselContent className="-ml-1">
             {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem
-                    key={index}
-                    className="pl-2 basis-full sm:basis-1/2 lg:basis-1/3"
-                >
-                  <div className="p-2">
-                    <Card>
-                      <CardContent className="flex flex-col items-center justify-center p-4 gap-2 h-[300px]">
-                        <div className="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-gray-400">
-                        {index + 1}
-                      </span>
+                <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
+                    <a href="#">
+                        <div className="p-1">
+                            <Card className="w-full">
+                                <CardContent className="flex flex-col p-0">
+                                    <img
+                                        className="w-full h-auto object-cover rounded-t-2xl"
+                                        src="https://maymont.org/wp-content/uploads/2020/04/banner-red-fox.jpg"
+                                        alt="image"
+                                    />
+
+                                    <h2 className="p-2 text-indigo-900 font-bold">Info job</h2>
+                                    <h3 className="px-2 text-indigo-900">subcategoria</h3>
+                                    <p className="px-2">Lorem ipsum dolor</p>
+                                </CardContent>
+                            </Card>
                         </div>
-                        <div className="text-center">
-                          <h3 className="font-semibold text-lg">Funcionário {index + 1}</h3>
-                          <p className="text-sm text-gray-500">Cargo {index + 1}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                    </a>
                 </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="mt-4 gap-2 flex items-center justify-center">
-            <CarouselPrevious className="relative top-0 left-0 translate-y-0" />
-            <CarouselNext className="relative top-0 right-0 translate-y-0" />
-          </div>
+          <CarouselPrevious />
+          <CarouselNext />
         </Carousel>
       </div>
   );
