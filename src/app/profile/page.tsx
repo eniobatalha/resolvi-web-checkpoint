@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import TagsPopulares from "@/components/organisms/TagsPopulares";
 import { CarouselWorkers } from "@/components/organisms/CarouselWorkers";
@@ -47,7 +47,7 @@ const ProfilePage = () => {
     setUsername(newUsername);
   };
   // Função para atualizar o username
-  
+
   const handleAddressChange = (newAddress: any) => {
     setAddress(newAddress);
   };
@@ -57,7 +57,7 @@ const ProfilePage = () => {
     setNumber(newNumber);
   };
   // Função para atualizar o username
-  
+
   const handleZipCodeChange = (newZipCode: any) => {
     setZipCode(newZipCode);
   };
@@ -111,6 +111,27 @@ function ProfileProfessional({
   handleNumberChange,
   handleZipCodeChange,
 }: ProfileProps) {
+  const fetchOrdersWorker = async () => {
+    let clientId = 0;
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/order/client-orders/${clientId}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar categorias.");
+      }
+      // const data: Category[] = await response.json(); // Tipo esperado do endpoint
+      // setCategories(data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrdersWorker();
+  }, []);
+
   return (
     <main className="flex-1 bg-white overflow-y-auto">
       <div className="space-y-12">
@@ -142,7 +163,9 @@ function ProfileProfessional({
               <h3 className="pt-4 font-bold text-[32px] text-indigo-900">
                 Endereço
               </h3>
-              <p className="text-xl pb-4 text-gray-600">{address}, {number} - {zipCode}</p>
+              <p className="text-xl pb-4 text-gray-600">
+                {address}, {number} - {zipCode}
+              </p>
               {/* Passa a função de atualização de nome e username */}
               <EditeAddress
                 onAddressChange={handleAddressChange}
@@ -157,7 +180,7 @@ function ProfileProfessional({
         </div>
 
         <div className="px-24">
-          <DataTableDemo />
+          <DataTableDemo type="worker" orders={[]} />
         </div>
 
         <div className="py-6 mb-4">
@@ -192,6 +215,27 @@ function ProfileUserNormal({
   handleNumberChange,
   handleZipCodeChange,
 }: ProfileProps) {
+  const fetchOrdersClient = async () => {
+    let clientId = 0;
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/order/client-orders/${clientId}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar categorias.");
+      }
+      // const data: Category[] = await response.json(); // Tipo esperado do endpoint
+      // setCategories(data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrdersClient();
+  }, []);
+
   return (
     <main className="flex-1 bg-white overflow-y-auto">
       <div className="space-y-12">
@@ -237,7 +281,7 @@ function ProfileUserNormal({
         </div>
 
         <div className="px-24">
-          <DataTableDemo />
+          <DataTableDemo type="client" orders={[]} />
         </div>
 
         <div className="py-6 mb-4">
