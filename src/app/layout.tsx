@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { League_Spartan } from "next/font/google"; // Importa a fonte League Spartan
+import { League_Spartan } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -17,13 +17,14 @@ const geistMono = localFont({
 });
 
 const leagueSpartan = League_Spartan({
-  subsets: ["latin"], // Adicione os subconjuntos necessários
-  weight: ["400", "700"], // Ajuste os pesos conforme necessário
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Resolvi",
   description: "Seu problema resolvido!",
+  icons: '/img/favicon.ico'
 };
 
 export default function RootLayout({

@@ -19,7 +19,7 @@ const HeroSectionProfessional: React.FC = () => {
 
             <div className="hidden lg:block">
                 <img
-                    src="img/professional-hero.png"
+                    src="https://img.freepik.com/free-photo/workman-with-his-arms-crossed-white-background_1368-5759.jpg"
                     alt="Profissional"
                     className="w-64 h-64 object-cover"
                 />

@@ -8,6 +8,7 @@ import DownloadAppSection from "@/components/organisms/DownloadAppSection";
 import InsetHome1 from "@/components/organisms/InsetHome";
 import ServicesSection from "@/components/organisms/ServicesSection";
 import React from "react";
+import TipsProfessional from "@/components/organisms/TipsProfessional";
 
 const HomeProfessional = () => {
     return (
@@ -17,10 +18,8 @@ const HomeProfessional = () => {
 
                 <main className="flex-1 bg-white overflow-y-auto">
                     <div className="space-y-8">
-                        {/* Hero Section para Profissionais */}
                         <HeroSectionProfessional />
 
-                        {/* Barra de Pesquisa */}
                         <div className="relative flex items-center w-3/4 mx-auto">
                             <FiSearch className="absolute left-4 text-gray-500" size={20}/>
                             <Input
@@ -30,19 +29,16 @@ const HomeProfessional = () => {
                             />
                         </div>
 
-                        {/* Tags Populares */}
                         <TagsPopulares />
 
-                        {/* Serviços Próximos */}
-                        <div className="py-6 mb-4">
+                        <div className="py-6 mb-4 flex flex-col items-center justify-center">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-gray-900">Serviços perto de você</h1>
                                 <h2 className="text-xl text-gray-900 mt-2">Encontre oportunidades de trabalho na sua região</h2>
                             </div>
-                            <CarouselWorkers/>
+                            <CarouselWorkers />
                         </div>
 
-                        {/* Seção de Download do App */}
                         <div>
                             <DownloadAppSection/>
                         </div>
@@ -66,25 +62,14 @@ const HomeProfessional = () => {
                             </div>
                         </div>
 
-                        {/* Pedidos Frequentes */}
-                        <div>
-                            <div className="text-center">
-                                <h1 className="text-3xl font-bold text-indigo-900">Pedidos mais frequentes</h1>
-                                <h2 className="text-xl text-gray-900 mt-2">Mais de 30 pedidos realizados por dia</h2>
-                            </div>
-                            <CarouselWorkers/>
-                        </div>
-
-                        {/* Dicas para Profissionais */}
                         <div className="py-6 mb-4">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-gray-900">Dicas para profissionais</h1>
                                 <h2 className="text-xl text-gray-900 mt-2">Aprenda a se destacar e aumentar suas chances de ser contratado</h2>
                             </div>
-                            <InsetHome1/>
+                            <TipsProfessional selector={false} img={""} title={""} description={""}/>
                         </div>
 
-                        {/* Seção de Serviços */}
                         <div>
                             <ServicesSection/>
                         </div>
