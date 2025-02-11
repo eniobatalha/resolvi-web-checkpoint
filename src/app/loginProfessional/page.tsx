@@ -16,7 +16,7 @@ const AuthPage = () => {
             style={{ backgroundImage: "url('/img/bg.png')" }}
         >
             <video
-                src="/video/clients-bg.mp4"
+                src="/video/workers-bg.mp4"
                 className="absolute top-0 left-0 w-full h-full object-cover z-0"
                 autoPlay
                 loop
