@@ -79,12 +79,12 @@ const TesteHome = () => {
                         </div>
 
                         {/* Dicas para Profissionais */}
-                        <div className="py-6 mb-4 flex flex-col justify-center items-center">
+                        <div className="py-6 mb-4 flex flex-col justify-between items-center">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Dicas para profissionais</h1>
                                 <h2 className="text-xl text-gray-900 mt-2">Aprenda a se destacar e aumentar suas chances de ser contratado</h2>
                             </div>
-                            <div>
+                            <div className="flex flex-col gap-4">
                                 <TipsProfessional
                                     img="https://www.theworkersunion.com/wp-content/uploads/2022/11/factory-workers-from-all-sectors.jpg"
                                     title="Use seu nome real!"
