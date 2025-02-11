@@ -25,8 +25,8 @@ const Page = () => {
 
     return (
         <main>
-            <MenuCompleto />
-            <MenuCategoria />
+            <MenuCompleto/>
+            <MenuCategoria/>
             <Menu/>
             <section className="w-full max-w-[1200px] mx-auto py-[48px]">
                 <input

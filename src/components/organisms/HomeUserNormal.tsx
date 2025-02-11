@@ -124,7 +124,6 @@ const HomeUserNormal = () => {
                 <h2 className="text-xl text-gray-900 mt-2">Os serviços mais realizados de cada categoria</h2>
               </div>
 
-              {/* Componente de Carousel de Profissionais */}
               <CarouselWorkers />
             </div>
 

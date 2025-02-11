@@ -3,108 +3,87 @@ import { FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="text-white bg-[#16161b] h-[45rem] md:h-[43rem] lg:h-[37rem] pt-[32px] flex flex-col mt-auto">
-            <div className="flex justify-between items-center w-full px-[168px] h-20 border-b-[1px]">
-                <div>
-                    <h2 className="font-bold text-4xl">
+        <footer className="text-white bg-[#16161b] min-h-[800px] md:min-h-[600px] lg:min-h-[500px] pt-8 md:pt-12 flex flex-col mt-auto">
+            {/* Top Section */}
+            <div className="flex flex-col lg:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 gap-4 pb-8 border-b border-gray-700">
+                <div className="text-center lg:text-left max-w-2xl">
+                    <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl mb-2">
                         Consiga aquele freela com{" "}
+                        <br/>
                         <span className="text-indigo-500">Resolvi Profissional</span>
                     </h2>
-                    <p>Monte agora mesmo seu portifólo.</p>
                 </div>
 
-                <Button variant="outline" className="text-indigo-900">
+                <Button variant="outline" className="text-indigo-900 w-full lg:w-auto">
                     Quero ser profissional
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full px-[168px] mt-[32px]">
-                <div>
-                    <h4 className="text-[32px] font-bold">Sobre</h4>
-                    <ul>
-                        <li><a href="#"><span>Quem somos</span></a></li>
-                        <li><a href="#"><span>Carreiras</span></a></li>
-                        <li><a href="#"><span>Fale conosco</span></a></li>
+            {/* Main Content Grid */}
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full px-4 md:px-8 lg:px-16 xl:px-32 mt-8">
+                {/* Column 1 */}
+                <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold">Sobre</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li><a href="#" className="hover:text-white transition">Quem somos</a></li>
+                        <li><a href="#" className="hover:text-white transition">Carreiras</a></li>
+                        <li><a href="#" className="hover:text-white transition">Fale conosco</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 className="text-[32px] font-bold">Desenvolvimento Web</h4>
-                    <ul>
-                        <li><a href="#"><span>Desenvolvimento Web</span></a></li>
-                        <li><a href="#"><span>React JS</span></a></li>
-                        <li><a href="#"><span>Angular JS</span></a></li>
-                        <li><a href="#"><span>Java</span></a></li>
+                {/* Column 2 */}
+                <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold">Desenvolvimento Web</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li><a href="#" className="hover:text-white transition">Desenvolvimento Web</a></li>
+                        <li><a href="#" className="hover:text-white transition">React JS</a></li>
+                        <li><a href="#" className="hover:text-white transition">Angular JS</a></li>
+                        <li><a href="#" className="hover:text-white transition">Java</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 className="text-[32px] font-bold">Conheça a Resolvi</h4>
-                    <ul>
-                        <li><a href="#"><span>Obtenha o aplicativo</span></a></li>
-                        <li><a href="#"><span>Planos e preços</span></a></li>
-                        <li><a href="#"><span>Ajuda e suporte</span></a></li>
+                {/* Column 3 */}
+                <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold">Conheça a Resolvi</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li><a href="#" className="hover:text-white transition">Obtenha o aplicativo</a></li>
+                        <li><a href="#" className="hover:text-white transition">Planos e preços</a></li>
+                        <li><a href="#" className="hover:text-white transition">Ajuda e suporte</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 className="text-[32px] font-bold">Profissionais</h4>
-                    <ul>
-                        <li><a href="#"><span>Monetização</span></a></li>
-                        <li><a href="#"><span>Preços</span></a></li>
-                        <li><a href="#"><span>Curriculo</span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full px-[168px] mt-[32px] mb-8">
-                <div>
-                    <h4 className="text-[32px] font-bold">Principais Serviços</h4>
-                    <ul>
-                        <li><a href="#"><span>Encanador</span></a></li>
-                        <li><a href="#"><span>Detetive particular</span></a></li>
-                        <li><a href="#"><span>Jardinagem</span></a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="text-[32px] font-bold">Lecione</h4>
-                    <ul>
-                        <li><a href="#"><span>Música</span></a></li>
-                        <li><a href="#"><span>Espanhol</span></a></li>
-                        <li><a href="#"><span>Inglês</span></a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="text-[32px] font-bold">Principais cidades</h4>
-                    <ul>
-                        <li><a href="#"><span>Motorista em Jaboatão Guararapes</span></a></li>
-                        <li><a href="#"><span>Professor de inglês em Jaboatão dos Guararapes</span></a></li>
-                        <li><a href="#"><span>Eletricista em Recife</span></a></li>
-                        <li><a href="#"><span>Entregador em Moreno</span></a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="text-[32px] font-bold">Segurança</h4>
-                    <ul>
-                        <li><a href="#"><span>Podemos informar onde você mora?</span></a></li>
-                        <li><a href="#"><span>Meus dados</span></a></li>
-                        <li><a href="#"><span>Login - recuperar senha</span></a></li>
+                {/* Column 4 */}
+                <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold">Profissionais</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li><a href="#" className="hover:text-white transition">Monetização</a></li>
+                        <li><a href="#" className="hover:text-white transition">Preços</a></li>
+                        <li><a href="#" className="hover:text-white transition">Currículo</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div className="flex justify-between items-center w-full px-[168px] py-[16px] mt-auto border-t-[1px]">
-                <div className="flex items-center gap-[16px]">
-                    <img src="/img/logo.svg" className="w-[150px]" alt="Logo Resolvi" />
-                    <p>© 2025 Resolvi, Inc.</p>
+            {/* Bottom Section */}
+            <div className="flex flex-col md:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 py-8 mt-8 border-t border-gray-700 gap-4">
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                    <img
+                        src="/img/logo.svg"
+                        className="w-32 md:w-40"
+                        alt="Logo Resolvi"
+                    />
+                    <p className="text-gray-400 text-sm">© 2025 Resolvi, Inc.</p>
                 </div>
 
-                <a href="https://www.instagram.com/appresolvi/profilecard/?igsh=NjdxY2UydHd5d2Nx" target="_blank"><FaInstagram /></a>
-
-                <p>🗺 Brasil, PE</p>
+                <div className="flex items-center gap-4">
+                    <a
+                        href="https://www.instagram.com/appresolvi/profilecard/?igsh=NjdxY2UydHd5d2Nx"
+                        target="_blank"
+                        className="text-2xl hover:text-indigo-500 transition"
+                    >
+                        <FaInstagram />
+                    </a>
+                    <p className="text-gray-400 text-sm">🗺 Brasil, PE</p>
+                </div>
             </div>
         </footer>
     );
