@@ -173,7 +173,12 @@ export const columns: ColumnDef<Servicos>[] = [
   },
 ]
 
-export function DataTableDemo() {
+interface OrdersProps {
+  type: string,
+  orders: []
+}
+
+export function DataTableDemo({type, orders}: OrdersProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
