@@ -3,14 +3,16 @@ import MenuCompleto from "@/components/organisms/MenuCompleto";
 import Menu from "@/components/organisms/Menu";
 import React from "react";
 import Footer from "@/components/organisms/Footer";
+import MenuCategoria from "@/components/organisms/MenuCategoria";
 
 const OrderPage = () => {
     return (
         <>
             <MenuCompleto />
+            <MenuCategoria />
             <Menu />
             <main className="flex">
-                <div className="w-2/4 px-24 flex flex-col items-center sticky top-[20%] h-screen overflow-y-auto">
+                <div className="w-2/4 px-24 flex flex-col items-center sticky top-[30%] h-screen overflow-y-auto">
                     <div className="w-[32%] py-10 flex flex-col items-center">
                         <div className="flex flex-col w-full items-center justify-center">
                             <img
