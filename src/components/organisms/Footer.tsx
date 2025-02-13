@@ -3,8 +3,9 @@ import { FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="text-white bg-[#16161b] min-h-[800px] md:min-h-[600px] lg:min-h-[500px] pt-8 md:pt-12 flex flex-col mt-auto">
-            {/* Top Section */}
+        <footer  className="text-white bg-[#16161b] min-h-[800px] md:min-h-[600px] lg:min-h-[500px] pt-8 md:pt-12 flex flex-col mt-auto">
+
+
             <div className="flex flex-col lg:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 gap-4 pb-8 border-b border-gray-700">
                 <div className="text-center lg:text-left max-w-2xl">
                     <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl mb-2">
@@ -19,7 +20,6 @@ const Footer = () => {
                 </Button>
             </div>
 
-            {/* Main Content Grid */}
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full px-4 md:px-8 lg:px-16 xl:px-32 mt-8">
                 {/* Column 1 */}
                 <div className="space-y-4">
@@ -31,7 +31,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Column 2 */}
                 <div className="space-y-4">
                     <h4 className="text-xl md:text-2xl font-bold">Desenvolvimento Web</h4>
                     <ul className="space-y-2 text-gray-400">
@@ -42,7 +41,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Column 3 */}
                 <div className="space-y-4">
                     <h4 className="text-xl md:text-2xl font-bold">Conheça a Resolvi</h4>
                     <ul className="space-y-2 text-gray-400">
@@ -52,7 +50,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Column 4 */}
                 <div className="space-y-4">
                     <h4 className="text-xl md:text-2xl font-bold">Profissionais</h4>
                     <ul className="space-y-2 text-gray-400">
@@ -63,7 +60,6 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Bottom Section */}
             <div className="flex flex-col md:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 py-8 mt-8 border-t border-gray-700 gap-4">
                 <div className="flex flex-col md:flex-row items-center gap-4">
                     <img

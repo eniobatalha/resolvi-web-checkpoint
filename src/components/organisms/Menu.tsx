@@ -2,6 +2,7 @@ import {Button} from "@/components/ui/button";
 import {FaHome} from "react-icons/fa";
 import {BsChatLeftText} from "react-icons/bs";
 import {MdMoreHoriz} from "react-icons/md";
+import { CiStickyNote } from "react-icons/ci";
 import React from "react";
 
 const Menu = () => {
@@ -13,6 +14,12 @@ const Menu = () => {
             </Button>
             <Button className="p-3 hover:bg-indigo-800">
                 <BsChatLeftText size={20}/>
+            </Button>
+            <Button className="p-[16px] hover:bg-indigo-800">
+                <span>+</span>
+            </Button>
+            <Button className="p-[16px] hover:bg-indigo-800">
+                <CiStickyNote size={20} />
             </Button>
             <Button className="p-3 hover:bg-indigo-800">
                 <MdMoreHoriz size={20}/>

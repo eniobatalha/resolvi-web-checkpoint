@@ -251,6 +251,7 @@ function ProfileUserNormal({
                 <h2 className="pt-4 font-bold text-[32px] text-indigo-900">
                   {name}
                 </h2>
+                <p>EU SOU UM TESTE</p>
                 <p className="text-xl pb-4 text-gray-600">{username}</p>
                 {/* Passa a função de atualização de nome e username */}
                 <EditeProfile
