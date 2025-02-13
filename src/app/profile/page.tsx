@@ -14,7 +14,7 @@ import Menu from "@/components/organisms/Menu";
 import Footer from "@/components/organisms/Footer";
 import { EditeAddress } from "@/components/organisms/EditAddress";
 
-interface ProfileProps {
+interface ProfileUserProps {
   name: string;
   username: string;
   address: string;
@@ -27,6 +27,23 @@ interface ProfileProps {
   handleZipCodeChange: (value: string) => void;
 }
 
+interface ProfileWorkerProps {
+  name: string;
+  username: string;
+  address: string;
+  number: string;
+  zipCode: string;
+  category: string;
+  subCategory: string;
+  handleNameChange: (value: string) => void;
+  handleUsernameChange: (value: string) => void;
+  handleAddressChange: (value: string) => void;
+  handleNumberChange: (value: string) => void;
+  handleZipCodeChange: (value: string) => void;
+  handleCategoryChange: (value: string) => void;
+  handleSubCategoryChange: (value: string) => void;
+}
+
 const ProfilePage = () => {
   // Mova o useState para dentro do componente
   const [user, setUser] = React.useState(false);
@@ -36,6 +53,9 @@ const ProfilePage = () => {
   const [address, setAddress] = useState("IFOPE"); // Estado local para o nome
   const [number, setNumber] = useState("09"); // Estado local para o username
   const [zipCode, setZipCode] = useState("90878"); // Estado local para o username
+
+  const [category, setCategory] = useState("09");
+  const [subCategory, setSubCategory] = useState("09");
 
   // Função para atualizar o nome
   const handleNameChange = (newName: any) => {
@@ -56,10 +76,18 @@ const ProfilePage = () => {
   const handleNumberChange = (newNumber: any) => {
     setNumber(newNumber);
   };
+  
   // Função para atualizar o username
-
   const handleZipCodeChange = (newZipCode: any) => {
     setZipCode(newZipCode);
+  };
+
+  const handleCategoryChange = (newCategory: any) => {
+    setCategory(newCategory);
+  };
+
+  const handleSubCategoryChange = (newSubCategory: any) => {
+    setSubCategory(newSubCategory);
   };
 
   return (
@@ -87,11 +115,15 @@ const ProfilePage = () => {
             address={address}
             number={number}
             zipCode={zipCode}
+            category={category}
+            subCategory={subCategory}
             handleNameChange={handleNameChange}
             handleUsernameChange={handleUsernameChange}
             handleAddressChange={handleAddressChange}
             handleNumberChange={handleNumberChange}
             handleZipCodeChange={handleZipCodeChange}
+            handleCategoryChange={handleCategoryChange}
+            handleSubCategoryChange={handleSubCategoryChange}
           />
         )}
       </div>
@@ -105,12 +137,14 @@ function ProfileProfessional({
   address,
   number,
   zipCode,
+  category,
+  subCategory,
   handleNameChange,
   handleUsernameChange,
   handleAddressChange,
   handleNumberChange,
   handleZipCodeChange,
-}: ProfileProps) {
+}: ProfileWorkerProps) {
   const fetchOrdersWorker = async () => {
     let clientId = 0;
     try {
@@ -176,6 +210,24 @@ function ProfileProfessional({
                 currentZipCode={zipCode}
               />
             </div>
+            <div className="flex flex-col justify-center items-center">
+              {/* Exibe a categoria e o subcategoria do usuário */}
+              <h3 className="pt-4 font-bold text-[32px] text-indigo-900">
+                Categoria
+              </h3>
+              <p className="text-xl pb-4 text-gray-600">
+                {address}, {number} - {zipCode}
+              </p>
+              {/* Passa a função de atualização de nome e username */}
+              <EditeAddress
+                onAddressChange={handleAddressChange}
+                onNumberChange={handleNameChange}
+                onZipCodeChange={handleZipCodeChange}
+                currentAddress={address}
+                currentNumber={number}
+                currentZipCode={zipCode}
+              />
+            </div>
           </div>
         </div>
 
@@ -214,7 +266,7 @@ function ProfileUserNormal({
   handleAddressChange,
   handleNumberChange,
   handleZipCodeChange,
-}: ProfileProps) {
+}: ProfileUserProps) {
   const fetchOrdersClient = async () => {
     let clientId = 0;
     try {
