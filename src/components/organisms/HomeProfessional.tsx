@@ -67,7 +67,7 @@ const HomeProfessional = () => {
                                 <h1 className="text-3xl font-bold text-gray-900">Dicas para profissionais</h1>
                                 <h2 className="text-xl text-gray-900 mt-2">Aprenda a se destacar e aumentar suas chances de ser contratado</h2>
                             </div>
-                            <TipsProfessional/>
+                            <TipsProfessional selector={false} img={""} title={""} description={""}/>
                         </div>
 
                         <div>

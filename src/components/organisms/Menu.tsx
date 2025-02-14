@@ -1,8 +1,9 @@
 import {Button} from "@/components/ui/button";
 import {FaHome} from "react-icons/fa";
 import {BsChatLeftText} from "react-icons/bs";
-import {MdMoreHoriz} from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
 import { CiStickyNote } from "react-icons/ci";
+import { ImProfile } from "react-icons/im";
 import React from "react";
 
 const Menu = () => {
@@ -16,13 +17,13 @@ const Menu = () => {
                 <BsChatLeftText size={20}/>
             </Button>
             <Button className="p-[16px] hover:bg-indigo-800">
-                <span>+</span>
+                <FaPlus size={20} />
             </Button>
             <Button className="p-[16px] hover:bg-indigo-800">
                 <CiStickyNote size={20} />
             </Button>
-            <Button className="p-3 hover:bg-indigo-800">
-                <MdMoreHoriz size={20}/>
+            <Button className="p-[16px] hover:bg-indigo-800">
+                <ImProfile size={20} />
             </Button>
         </aside>
     )

@@ -20,7 +20,7 @@ const OrderPage = () => {
                                 src="https://foxbombas.com.br/2020b/wp-content/uploads/2021/08/pexels-funny-foxy-pride-5872242-768x509.jpg"
                                 alt="Professional image"
                             />
-                            <h2 className="text-indigo-900 text-2xl font-bold py-4">Nome do usuário</h2>
+                            <h2 className="text-indigo-900 text-2xl font-bold py-4">Nome do Cliente</h2>
                         </div>
 
                         <div className="w-full mt-4 flex flex-col items-center">
