@@ -22,7 +22,7 @@ const TesteHome = () => {
                     <div className="space-y-8">
                         <HeroSectionProfessional />
 
-                        {/* Barra de Pesquisa */}
+
                         <div className="relative flex items-center w-3/4 mx-auto">
                             <FiSearch className="absolute left-4 text-gray-500" size={20}/>
                             <Input
