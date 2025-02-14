@@ -19,6 +19,10 @@ import {
 const MenuCompleto: React.FC = () => {
   const router = useRouter();
 
+  const [profissional, setProfissional] = useState(false);
+
+
+
   const [user, setUser] = useState({
     nome: "Usuário",
     email: "",
@@ -56,12 +60,13 @@ const MenuCompleto: React.FC = () => {
 
       {/* Links de navegação */}
       <nav className="flex items-center space-x-8 text-lg">
-        <a
-          href="/"
-          className="text-white hover:text-indigo-500"
+        { profissional ? ( <a
+            href="/"
+            className="text-white hover:text-indigo-500"
         >
           Seja um profissional
-        </a>
+        </a> ) : null }
+
         <a
           href="/"
           className="text-white hover:text-indigo-500"

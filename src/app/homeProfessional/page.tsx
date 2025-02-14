@@ -22,7 +22,7 @@ const TesteHome = () => {
                     <div className="space-y-8">
                         <HeroSectionProfessional />
 
-                        {/* Barra de Pesquisa */}
+
                         <div className="relative flex items-center w-3/4 mx-auto">
                             <FiSearch className="absolute left-4 text-gray-500" size={20}/>
                             <Input
@@ -74,7 +74,6 @@ const TesteHome = () => {
                             <CarouselWorkers/>
                         </div>
 
-                        {/* Dicas para Profissionais */}
                         <div className="py-6 mb-4 flex flex-col justify-between items-center">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Dicas para profissionais</h1>
@@ -124,7 +123,7 @@ const TesteHome = () => {
                     </div>
                 </main>
             </div>
-            <Footer/>
+            <Footer profissional={false}/>
         </>
     );
 };

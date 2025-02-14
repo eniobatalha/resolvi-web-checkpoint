@@ -1,15 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
-import TagsPopulares from "@/components/organisms/TagsPopulares";
 import { CarouselWorkers } from "@/components/organisms/CarouselWorkers";
 import DownloadAppSection from "@/components/organisms/DownloadAppSection";
 import { DataTableDemo } from "@/components/organisms/ListaInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EditeProfile } from "@/components/organisms/EditProfile";
-import { GraphicProfile } from "@/components/organisms/GraphicProfile";
-import { Card } from "@/components/ui/card";
-import { FaStar } from "react-icons/fa";
 import Menu from "@/components/organisms/Menu";
 import Footer from "@/components/organisms/Footer";
 import { EditeAddress } from "@/components/organisms/EditAddress";
@@ -108,10 +104,10 @@ function ProfileProfessional({
   handleNameChange,
   handleUsernameChange,
   handleAddressChange,
-  handleNumberChange,
   handleZipCodeChange,
 }: ProfileProps) {
   const fetchOrdersWorker = async () => {
+
     let clientId = 0;
     try {
       const response = await fetch(
@@ -131,6 +127,8 @@ function ProfileProfessional({
   useEffect(() => {
     fetchOrdersWorker();
   }, []);
+
+  const [woker, setWorker] = useState(true);
 
   return (
     <main className="flex-1 bg-white overflow-y-auto">
@@ -179,7 +177,7 @@ function ProfileProfessional({
           </div>
         </div>
 
-        <div className="px-24">
+        <div className={`px-24 pointer-events-none ${woker ? "pointer-events-none" : "pointer-events-auto"}`}>
           <DataTableDemo type="worker" orders={[]} />
         </div>
 
