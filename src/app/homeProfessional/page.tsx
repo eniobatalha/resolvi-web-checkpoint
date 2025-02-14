@@ -74,7 +74,6 @@ const TesteHome = () => {
                             <CarouselWorkers/>
                         </div>
 
-                        {/* Dicas para Profissionais */}
                         <div className="py-6 mb-4 flex flex-col justify-between items-center">
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Dicas para profissionais</h1>
@@ -124,7 +123,7 @@ const TesteHome = () => {
                     </div>
                 </main>
             </div>
-            <Footer/>
+            <Footer profissional={false}/>
         </>
     );
 };
