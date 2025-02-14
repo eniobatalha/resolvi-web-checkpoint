@@ -53,47 +53,6 @@ const CategoryPage = () => {
     fetchCategories();
   }, []);
 
-  // Fetch categories and subcategories on component mount
-  // useEffect(() => {
-  //   const fetchAddCategories = async () => {
-     
-  //     let workedId = 0
-  //     try {
-  //       const response = await fetch(`http://localhost:8080/api/worker/${workedId}/addCategory`);
-        
-  //       if (!response.ok) {
-  //         throw new Error("Erro ao buscar categorias.");
-  //       }
-  //       const data: Category[] = await response.json(); // Tipo esperado do endpoint
-  //       setCategories(data);
-  //     } catch (error) {
-  //       console.error("Erro ao carregar categorias:", error);
-  //     }
-  //   };
-
-  //   fetchAddCategories();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchAddSubCategories = async () => {
-
-  //     let workedId = 0
-  //     try {
-  //       const response = await fetch(`http://localhost:8080/api/worker/${workedId}/subcategories`);
-        
-  //       if (!response.ok) {
-  //         throw new Error("Erro ao buscar categorias.");
-  //       }
-  //       const data: Category[] = await response.json(); // Tipo esperado do endpoint
-  //       setCategories(data);
-  //     } catch (error) {
-  //       console.error("Erro ao carregar categorias:", error);
-  //     }
-  //   };
-
-  //   fetchAddSubCategories();
-  // }, []);
-
   // Função para atualizar o username
   const handleCategorySubcategoryChange = (idCategory: string, idSubCategory: string) => {
     console.log('category', idCategory)

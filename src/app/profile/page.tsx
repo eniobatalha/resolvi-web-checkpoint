@@ -9,37 +9,45 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EditeProfile } from "@/components/organisms/EditProfile";
 import { GraphicProfile } from "@/components/organisms/GraphicProfile";
 import { Card } from "@/components/ui/card";
-import { FaStar } from "react-icons/fa";
 import Menu from "@/components/organisms/Menu";
 import Footer from "@/components/organisms/Footer";
 import { EditeAddress } from "@/components/organisms/EditAddress";
+import { EditeCategory } from "@/components/organisms/EditCategory";
 
 interface ProfileUserProps {
   name: string;
   username: string;
-  address: string;
-  number: string;
-  zipCode: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
   handleNameChange: (value: string) => void;
   handleUsernameChange: (value: string) => void;
-  handleAddressChange: (value: string) => void;
-  handleNumberChange: (value: string) => void;
-  handleZipCodeChange: (value: string) => void;
+  handleStreetChange: (value: string) => void;
+  handleCityChange: (value: string) => void;
+  handleStateChange: (value: string) => void;
+  handlePostalCodeChange: (value: string) => void;
+  handleCountryChange: (value: string) => void;
 }
 
 interface ProfileWorkerProps {
   name: string;
   username: string;
-  address: string;
-  number: string;
-  zipCode: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
   category: string;
   subCategory: string;
   handleNameChange: (value: string) => void;
   handleUsernameChange: (value: string) => void;
-  handleAddressChange: (value: string) => void;
-  handleNumberChange: (value: string) => void;
-  handleZipCodeChange: (value: string) => void;
+  handleStreetChange: (value: string) => void;
+  handleCityChange: (value: string) => void;
+  handleStateChange: (value: string) => void;
+  handlePostalCodeChange: (value: string) => void;
+  handleCountryChange: (value: string) => void;
   handleCategoryChange: (value: string) => void;
   handleSubCategoryChange: (value: string) => void;
 }
@@ -50,9 +58,11 @@ const ProfilePage = () => {
   const [name, setName] = useState("João Campus"); // Nome do usuário
   const [username, setUsername] = useState("@joaocampus"); // Username do usuário
 
-  const [address, setAddress] = useState("IFOPE"); // Estado local para o nome
-  const [number, setNumber] = useState("09"); // Estado local para o username
-  const [zipCode, setZipCode] = useState("90878"); // Estado local para o username
+  const [street, setStreet] = useState("Rua albert saib"); // Estado local para o nome
+  const [city, setCity] = useState("Recife"); // Estado local para o nome
+  const [state, setState] = useState("PE"); // Estado local para o nome
+  const [postalCode, setPostalCode] = useState("1011167"); // Estado local para o username
+  const [country, setCountry] = useState("BRAZIL"); // Estado local para o username
 
   const [category, setCategory] = useState("09");
   const [subCategory, setSubCategory] = useState("09");
@@ -68,18 +78,24 @@ const ProfilePage = () => {
   };
   // Função para atualizar o username
 
-  const handleAddressChange = (newAddress: any) => {
-    setAddress(newAddress);
+  const handleStreetChange = (newStreet: any) => {
+    setStreet(newStreet);
   };
 
-  // Função para atualizar o username
-  const handleNumberChange = (newNumber: any) => {
-    setNumber(newNumber);
+  const handleCityChange = (newCity: any) => {
+    setCity(newCity);
   };
-  
-  // Função para atualizar o username
-  const handleZipCodeChange = (newZipCode: any) => {
-    setZipCode(newZipCode);
+
+  const handleStateChange = (newState: any) => {
+    setState(newState);
+  };
+
+  const handlePostalCodeChange = (newPostalCode: any) => {
+    setPostalCode(newPostalCode);
+  };
+
+  const handleCountryChange = (newCountry: any) => {
+    setCountry(newCountry);
   };
 
   const handleCategoryChange = (newCategory: any) => {
@@ -99,29 +115,37 @@ const ProfilePage = () => {
           <ProfileUserNormal
             name={name}
             username={username}
-            address={address}
-            number={number}
-            zipCode={zipCode}
+            street={street}
+            city={city}
+            state={state}
+            postalCode={postalCode}
+            country={country}
             handleNameChange={handleNameChange}
             handleUsernameChange={handleUsernameChange}
-            handleAddressChange={handleAddressChange}
-            handleNumberChange={handleNumberChange}
-            handleZipCodeChange={handleZipCodeChange}
+            handleStreetChange={handleStreetChange}
+            handleCityChange={handleCityChange}
+            handleStateChange={handleStateChange}
+            handlePostalCodeChange={handlePostalCodeChange}
+            handleCountryChange={handleCountryChange}
           />
         ) : (
           <ProfileProfessional
             name={name}
             username={username}
-            address={address}
-            number={number}
-            zipCode={zipCode}
+            street={street}
+            city={city}
+            state={state}
+            postalCode={postalCode}
+            country={country}
             category={category}
             subCategory={subCategory}
             handleNameChange={handleNameChange}
             handleUsernameChange={handleUsernameChange}
-            handleAddressChange={handleAddressChange}
-            handleNumberChange={handleNumberChange}
-            handleZipCodeChange={handleZipCodeChange}
+            handleStreetChange={handleStreetChange}
+            handleCityChange={handleCityChange}
+            handleStateChange={handleStateChange}
+            handlePostalCodeChange={handlePostalCodeChange}
+            handleCountryChange={handleCountryChange}
             handleCategoryChange={handleCategoryChange}
             handleSubCategoryChange={handleSubCategoryChange}
           />
@@ -134,16 +158,22 @@ const ProfilePage = () => {
 function ProfileProfessional({
   name,
   username,
-  address,
-  number,
-  zipCode,
+  street,
+  city,
+  state,
+  postalCode,
+  country,
   category,
   subCategory,
   handleNameChange,
   handleUsernameChange,
-  handleAddressChange,
-  handleNumberChange,
-  handleZipCodeChange,
+  handleStreetChange,
+  handleCityChange,
+  handleStateChange,
+  handlePostalCodeChange,
+  handleCountryChange,
+  handleCategoryChange,
+  handleSubCategoryChange,
 }: ProfileWorkerProps) {
   const fetchOrdersWorker = async () => {
     let clientId = 0;
@@ -198,16 +228,20 @@ function ProfileProfessional({
                 Endereço
               </h3>
               <p className="text-xl pb-4 text-gray-600">
-                {address}, {number} - {zipCode}
+                {street}, {city}/{state}, {country} - {postalCode}
               </p>
               {/* Passa a função de atualização de nome e username */}
               <EditeAddress
-                onAddressChange={handleAddressChange}
-                onNumberChange={handleNameChange}
-                onZipCodeChange={handleZipCodeChange}
-                currentAddress={address}
-                currentNumber={number}
-                currentZipCode={zipCode}
+                onStreetChange={handleStreetChange}
+                onCityChange={handleCityChange}
+                onStateChange={handleStateChange}
+                onPostalCodeChange={handlePostalCodeChange}
+                onCountryChange={handleCountryChange}
+                currentStreet={street}
+                currentCity={city}
+                currentState={state}
+                currentPostalCode={postalCode}
+                currentCountry={country}
               />
             </div>
             <div className="flex flex-col justify-center items-center">
@@ -216,16 +250,14 @@ function ProfileProfessional({
                 Categoria
               </h3>
               <p className="text-xl pb-4 text-gray-600">
-                {address}, {number} - {zipCode}
+                {street}, {city}/{state}, {country} - {postalCode}
               </p>
               {/* Passa a função de atualização de nome e username */}
-              <EditeAddress
-                onAddressChange={handleAddressChange}
-                onNumberChange={handleNameChange}
-                onZipCodeChange={handleZipCodeChange}
-                currentAddress={address}
-                currentNumber={number}
-                currentZipCode={zipCode}
+              <EditeCategory
+                onCategoryChange={handleCategoryChange}
+                onSubCategoryChange={handleSubCategoryChange}
+                currentCategory={category}
+                currentSubCategory={subCategory}
               />
             </div>
           </div>
@@ -258,14 +290,18 @@ function ProfileProfessional({
 function ProfileUserNormal({
   name,
   username,
-  address,
-  number,
-  zipCode,
+  street,
+  city,
+  state,
+  postalCode,
+  country,
   handleNameChange,
   handleUsernameChange,
-  handleAddressChange,
-  handleNumberChange,
-  handleZipCodeChange,
+  handleStreetChange,
+  handleCityChange,
+  handleStateChange,
+  handlePostalCodeChange,
+  handleCountryChange,
 }: ProfileUserProps) {
   const fetchOrdersClient = async () => {
     let clientId = 0;
@@ -316,18 +352,24 @@ function ProfileUserNormal({
             </div>
             <div className="flex flex-col justify-center items-center">
               {/* Exibe o nome e o username do usuário */}
-              <h2 className="pt-4 font-bold text-[32px] text-indigo-900">
-                {name}
-              </h2>
-              <p className="text-xl pb-4 text-gray-600">{username}</p>
+              <h3 className="pt-4 font-bold text-[32px] text-indigo-900">
+                Endereço
+              </h3>
+              <p className="text-xl pb-4 text-gray-600">
+                {street}, {city}/{state}, {country} - {postalCode}
+              </p>
               {/* Passa a função de atualização de nome e username */}
               <EditeAddress
-                onAddressChange={handleAddressChange}
-                onNumberChange={handleNameChange}
-                onZipCodeChange={handleZipCodeChange}
-                currentAddress={address}
-                currentNumber={number}
-                currentZipCode={zipCode}
+                onStreetChange={handleStreetChange}
+                onCityChange={handleCityChange}
+                onStateChange={handleStateChange}
+                onPostalCodeChange={handlePostalCodeChange}
+                onCountryChange={handleCountryChange}
+                currentStreet={street}
+                currentCity={city}
+                currentState={state}
+                currentPostalCode={postalCode}
+                currentCountry={country}
               />
             </div>
           </div>

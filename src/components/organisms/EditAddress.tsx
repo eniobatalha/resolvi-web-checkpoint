@@ -55,6 +55,7 @@ export function EditeAddress({
     onStreetChange(newStreet);
     onCityChange(newCity);
     onStateChange(newState);
+    onPostalCodeChange(newPostalCode);
     onCountryChange(newCountry);
   };
 
