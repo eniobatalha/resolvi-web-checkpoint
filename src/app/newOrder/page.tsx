@@ -1,6 +1,7 @@
 "use client"
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import MenuCategoria from "@/components/organisms/MenuCategoria";
+import Menu from "@/components/organisms/Menu";
 import React, { useState } from "react";
 import Footer from "@/components/organisms/Footer";
 
@@ -28,9 +29,10 @@ const NewOrder = () => { // 1. Nome do componente em PascalCase
         <>
             <MenuCompleto />
             <MenuCategoria />
+            <Menu/>
             <main className="flex justify-center">
-                <div className="container max-w-4xl px-4 py-10"> {/* 2. Container responsivo */}
-                    <form> {/* 3. Adicionado formulário */}
+                <div className="container max-w-4xl px-4 py-10">
+                    <form>
                         <div className="mb-6">
                             <label className="text-indigo-900 text-2xl font-bold py-2 block" htmlFor="titulo-trabalho">
                                 Título do trabalho
@@ -41,7 +43,7 @@ const NewOrder = () => { // 1. Nome do componente em PascalCase
                          focus:ring-2 focus:ring-indigo-500 w-full"
                                 type="text"
                                 placeholder="Insira aqui o título"
-                                required // 4. Validação HTML5
+                                required
                             />
                         </div>
 
@@ -58,7 +60,7 @@ const NewOrder = () => { // 1. Nome do componente em PascalCase
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* 5. Grid responsivo */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="text-indigo-900 block mb-2 font-bold" htmlFor="data-trabalho">
                                     Data do trabalho
@@ -114,11 +116,10 @@ const NewOrder = () => { // 1. Nome do componente em PascalCase
                          file:mr-4 file:py-2 file:px-4 file:rounded-md
                          file:border-0 file:bg-indigo-500 file:text-white
                          hover:file:bg-indigo-600 cursor-pointer"
-                                accept=".pdf,.doc,.docx,.jpg,.png" // 6. Tipos de arquivo específicos
+                                accept=".pdf,.doc,.docx,.jpg,.png"
                             />
                         </div>
 
-                        {/* 7. Botão de submissão */}
                         <button
                             type="submit"
                             className="mt-8 w-full bg-indigo-600 text-white py-3 px-6 rounded-md
