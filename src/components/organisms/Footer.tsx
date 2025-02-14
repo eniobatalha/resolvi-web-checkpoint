@@ -1,24 +1,32 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { FaInstagram } from "react-icons/fa";
+import { useState } from "react";
 
 const Footer = () => {
+
+    const [profissional, setProfissional] = useState(false);
+
     return (
         <footer  className="text-white bg-[#16161b] min-h-[800px] md:min-h-[600px] lg:min-h-[500px] pt-8 md:pt-12 flex flex-col mt-auto">
 
+            { profissional && (
+                <div className="flex flex-col lg:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 gap-4 pb-8 border-b border-gray-700">
 
-            <div className="flex flex-col lg:flex-row justify-between items-center w-full px-4 md:px-8 lg:px-16 xl:px-32 gap-4 pb-8 border-b border-gray-700">
-                <div className="text-center lg:text-left max-w-2xl">
-                    <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl mb-2">
-                        Consiga aquele freela com{" "}
-                        <br/>
-                        <span className="text-indigo-500">Resolvi Profissional</span>
-                    </h2>
+                    <div className="text-center lg:text-left max-w-2xl">
+                        <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl mb-2">
+                            Consiga aquele freela com{" "}
+                            <br/>
+                            <span className="text-indigo-500">Resolvi Profissional</span>
+                        </h2>
+                    </div>
+
+
+                    <Button variant="outline" className="text-indigo-900 w-full lg:w-auto">
+                        Quero ser profissional
+                    </Button>
                 </div>
-
-                <Button variant="outline" className="text-indigo-900 w-full lg:w-auto">
-                    Quero ser profissional
-                </Button>
-            </div>
+            )}
 
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full px-4 md:px-8 lg:px-16 xl:px-32 mt-8">
                 {/* Column 1 */}
