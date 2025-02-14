@@ -8,7 +8,7 @@ import Footer from "@/components/organisms/Footer";
 const ProfessionalCheckout = () => { // Nome do componente em PascalCase
     const [preco, setPreco] = useState('');
     const [imagemPreview, setImagemPreview] = useState<string | null>(null);
-    
+
     const formatarPreco = (valor: string) => {
         const valorLimpo = valor.replace(/[^\d,]/g, '');
         let [inteira, decimal] = valorLimpo.split(',');
