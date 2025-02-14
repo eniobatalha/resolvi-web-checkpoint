@@ -27,7 +27,7 @@ export function CarouselWorkers() {
 
                                             <h2 className="p-2 text-indigo-900 font-bold">Info job</h2>
                                             <h3 className="px-2 text-indigo-900">subcategoria</h3>
-                                            <p className="px-2">Lorem ipsum dolor</p>
+                                            <p className="px-2 pb-4">Lorem ipsum dolor</p>
                                         </CardContent>
                                     </Card>
                                 </div>

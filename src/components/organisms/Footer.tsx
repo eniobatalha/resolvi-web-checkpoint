@@ -2,7 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { FaInstagram } from "react-icons/fa";
 
-const Footer = ({ profissional }) => {  // Recebe a prop diretamente
+interface FooterProps {
+    profissional: boolean; // Substitua 'any' pelo tipo adequado do seu objeto profissional
+}
+
+const Footer = ({ profissional }: FooterProps) => {  // Recebe a prop diretamente
     return (
         <footer
             className={`text-white bg-[#16161b] ${
