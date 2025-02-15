@@ -12,9 +12,9 @@ const OrderPage = () => {
             <MenuCategoria />
             <Menu />
             <main className="flex">
-                <div className="w-2/4 px-24 flex flex-col items-center sticky top-[30%] h-screen overflow-y-auto">
+                <div className="w-2/5 px-24 flex flex-col items-center h-screen overflow-y-auto">
                     <div className="w-[32%] py-10 flex flex-col items-center">
-                        <div className="flex flex-col w-full items-center justify-center">
+                        <div className="flex flex-col w-full items-center justify-center py-10">
                             <img
                                 className="rounded-full w-[120px] h-[120px] object-cover"
                                 src="https://foxbombas.com.br/2020b/wp-content/uploads/2021/08/pexels-funny-foxy-pride-5872242-768x509.jpg"
@@ -45,34 +45,38 @@ const OrderPage = () => {
                     </div>
                 </div>
 
-                {/* Div da direita com rolagem */}
-                <div className="w-2/4 space-y-4 p-4 overflow-y-auto">
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Trabalhando" />
-                    <OrderStatus orderStatus="Cancelado" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
-                    <OrderStatus orderStatus="Concluído" />
+                <div className="w-[60%] flex flex-col justify-center gap-8 pr-4 h-screen">
+                    <div>
+                        <h2 className="text-[48px] font-bold mb-4 text-indigo-900">Concluídos</h2>
+                        <div className="flex overflow-x-auto pb-4 scrollbar scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-100 hover:scrollbar-thumb-indigo-600">
+                            <div className="flex gap-10 flex-nowrap min-h-[200px] px-2">
+                                <OrderStatus orderStatus="Concluído" />
+                                <OrderStatus orderStatus="Concluído" />
+                                <OrderStatus orderStatus="Cancelado" />
+                                <OrderStatus orderStatus="Concluído" />
+                                <OrderStatus orderStatus="Concluído" />
+                                <OrderStatus orderStatus="Concluído" />
+                                <OrderStatus orderStatus="Concluído" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 className="text-[48px] font-bold mb-4 text-orange-500">Em progresso</h2>
+                        <div className="flex overflow-x-auto pb-4 scrollbar scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-orange-100 hover:scrollbar-thumb-orange-600">
+                            <div className="flex gap-10 flex-nowrap min-h-[200px] px-2">
+                                <OrderStatus orderStatus="Trabalhando" />
+                                <OrderStatus orderStatus="Trabalhando" />
+                                <OrderStatus orderStatus="Trabalhando" />
+                                <OrderStatus orderStatus="Trabalhando" />
+                                <OrderStatus orderStatus="Trabalhando" />
+                                <OrderStatus orderStatus="Trabalhando" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
-            <Footer />
+            <Footer profissional={false} />
         </>
     );
 };

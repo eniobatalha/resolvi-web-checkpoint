@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar {
+    scrollbar-color: theme(colors.indigo.500) theme(colors.indigo.100);
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    @apply h-2;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-indigo-100 rounded-full;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-indigo-500 rounded-full border-2 border-solid border-indigo-500;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-indigo-600;
+  }
+
+  /* Estilo para a seção "Em progresso" (laranja) */
+  .scrollbar-thumb-orange-500::-webkit-scrollbar-thumb {
+    @apply bg-orange-500 border-orange-500;
+  }
+
+  .scrollbar-thumb-orange-500:hover::-webkit-scrollbar-thumb {
+    @apply bg-orange-600;
+  }
+
+  .scrollbar-track-orange-100::-webkit-scrollbar-track {
+    @apply bg-orange-100;
+  }
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
