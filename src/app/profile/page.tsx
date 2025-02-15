@@ -114,7 +114,7 @@ const ProfilePage = () => {
       try {
         let clientId = 2;
         const response = await fetch(
-          "http://localhost:8080/api/client/address/" + clientId
+          `http://localhost:8080/api/${user ? "client" : "worker"}/address/` + clientId
         );
         if (!response.ok) {
           throw new Error("Erro ao buscar categorias.");
@@ -138,7 +138,7 @@ const ProfilePage = () => {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
-          "/api/client/" + clientId,
+          `/api/${user ? "client" : "worker"}/` + clientId,
           { token }
         );
 
@@ -171,7 +171,7 @@ const ProfilePage = () => {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
-          "/api/client/address" + clientId,
+          `/api/${user ? "client" : "worker"}/address` + clientId,
           { token }
         );
 
@@ -204,7 +204,7 @@ const ProfilePage = () => {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.path(
-          "/api/client/address" + clientId,
+          `/api/${user ? "client" : "worker"}/address` + clientId,
           { token }, 
           {
             "street": street,
