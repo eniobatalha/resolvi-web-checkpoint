@@ -72,7 +72,7 @@ const OrderPage = () => {
                     <OrderStatus orderStatus="Concluído" />
                 </div>
             </main>
-            <Footer />
+            <Footer profissional={false} />
         </>
     );
 };

@@ -55,7 +55,7 @@ const Page = () => {
                     <ProfessionalListComponent professional={professionalData}/>
                 </div>
             </section>
-            <Footer/>
+            <Footer profissional={false}/>
         </main>
     )
 }

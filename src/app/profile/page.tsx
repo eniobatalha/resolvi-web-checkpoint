@@ -139,7 +139,7 @@ const ProfilePage = () => {
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
           "/api/client/" + clientId,
-          { token }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Axios já retorna os dados em response.data
@@ -172,7 +172,7 @@ const ProfilePage = () => {
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
           "/api/client/address" + clientId,
-          { token }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Axios já retorna os dados em response.data
@@ -203,15 +203,17 @@ const ProfilePage = () => {
       try {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
-        const response = await axiosInstance.path(
+        const response = await axiosInstance.patch(
           "/api/client/address" + clientId,
-          { token }, 
-          {
-            "street": street,
-            "city": city,
-            "state": state,
-            "postalCode": postalCode,
-            "country": country
+          { 
+            headers: { Authorization: `Bearer ${token}` },
+            data: {
+              street: street,
+              city: city,
+              state: state,
+              postalCode: postalCode,
+              country: country
+            }
           }
         );
 
@@ -413,7 +415,7 @@ function ProfileProfessional({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }
@@ -525,7 +527,7 @@ function ProfileUserNormal({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }

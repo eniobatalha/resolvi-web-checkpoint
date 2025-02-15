@@ -21,7 +21,7 @@ const HomePage = () => {
                     <HomeUserNormal/>
                 </div>
 
-                <Footer />
+                <Footer profissional={false} />
             </div>
         </ProtectedRoutes>
     );
