@@ -3,15 +3,16 @@ import React from 'react';
 type OrderStatusType = 'Em aberto' | 'Trabalhando' | 'Concluído' | 'Cancelado';
 
 interface OrderStatusProps {
-    title?: string;
-    description?: string;
-    orderStatus?: OrderStatusType;
+    title?: string,
+    description?: string,
+    orderStatus?: OrderStatusType,
+    className?: string
 }
 
 const OrderStatus: React.FC<OrderStatusProps> = ({
                                                      title = "titulo pedido aqui",
                                                      description = "lorem",
-                                                     orderStatus = "Em aberto" // Valor padrão corrigido
+                                                     orderStatus = "Em aberto"
                                                  }) => {
     const statusColors: Record<OrderStatusType, string> = {
         "Em aberto": "bg-blue-500",
@@ -21,8 +22,9 @@ const OrderStatus: React.FC<OrderStatusProps> = ({
     };
 
     return (
-        <a href="#" target="_blank" rel="noopener noreferrer">
-            <div className="my-4 flex flex-col justify-between w-[640px] h-[240px] py-4 border rounded-[16px] shadow-sm hover:shadow-md transition-shadow">
+        <a href="#" target="_blank" rel="noopener noreferrer" className="flex">
+            <div
+                className="my-4 flex flex-col justify-between w-[640px] h-[240px] border rounded-[16px] shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-full flex flex-col justify-center px-4">
                     <h2 className="font-bold text-indigo-900 text-[24px] mb-2">{title}</h2>
                     <p className="text-gray-600">{description}</p>
