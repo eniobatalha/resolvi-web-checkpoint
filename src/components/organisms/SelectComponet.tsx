@@ -22,22 +22,18 @@ export function SelectOptions({
   handleOptionChange,
 }: selectprop) {
   return (
-    <Select>
+    <Select onValueChange={(e: any) => handleOptionChange(e)} >
       <SelectTrigger className="w-[270px]">
         <SelectValue placeholder={"Selecione a " + type} />
       </SelectTrigger>
       <SelectContent>
-        <SelectGroup onClick={(e) => handleOptionChange(e.target.value)}>
+        <SelectGroup >
           <SelectLabel>{type}</SelectLabel>
           {options?.map((option, index) => (
-            <SelectItem key={index + 1} value={option.id}>
+            <SelectItem key={index + 1} value={option}>
               {option.name}
             </SelectItem>
           ))}
-          {/* <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem> */}
         </SelectGroup>
       </SelectContent>
     </Select>
