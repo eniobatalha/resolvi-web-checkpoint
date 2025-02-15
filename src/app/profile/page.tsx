@@ -114,7 +114,7 @@ const ProfilePage = () => {
       try {
         let clientId = 2;
         const response = await fetch(
-          `http://localhost:8080/api/${user ? "client" : "worker"}/address/` + clientId
+          "http://localhost:8080/api/client/address/" + clientId
         );
         if (!response.ok) {
           throw new Error("Erro ao buscar categorias.");
@@ -138,8 +138,8 @@ const ProfilePage = () => {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
-          `/api/${user ? "client" : "worker"}/` + clientId,
-          { token }
+          "/api/client/" + clientId,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Axios já retorna os dados em response.data
@@ -171,8 +171,8 @@ const ProfilePage = () => {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
         const response = await axiosInstance.get(
-          `/api/${user ? "client" : "worker"}/address` + clientId,
-          { token }
+          "/api/client/address" + clientId,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Axios já retorna os dados em response.data
@@ -203,15 +203,17 @@ const ProfilePage = () => {
       try {
         let clientId = 0;
         // Envia o token no corpo da requisição usando axiosInstance
-        const response = await axiosInstance.path(
-          `/api/${user ? "client" : "worker"}/address` + clientId,
-          { token }, 
-          {
-            "street": street,
-            "city": city,
-            "state": state,
-            "postalCode": postalCode,
-            "country": country
+        const response = await axiosInstance.patch(
+          "/api/client/address" + clientId,
+          { 
+            headers: { Authorization: `Bearer ${token}` },
+            data: {
+              street: street,
+              city: city,
+              state: state,
+              postalCode: postalCode,
+              country: country
+            }
           }
         );
 
@@ -413,7 +415,7 @@ function ProfileProfessional({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }
@@ -525,7 +527,7 @@ function ProfileUserNormal({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }

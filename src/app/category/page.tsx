@@ -14,87 +14,76 @@ import Menu from "@/components/organisms/Menu";
 import Footer from "@/components/organisms/Footer";
 import { EditeAddress } from "@/components/organisms/EditAddress";
 import { CarouselCategory } from "@/components/organisms/CarouselCategory";
-
-interface CategoriesProps {
-  array: object;
-  handleIdCategoryChange: (value: string) => void;
-}
+import axiosInstance from "../../../axiosInstance";
 
 interface Subcategory {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
   subcategories: Subcategory[];
 }
 
 const CategoryPage = () => {
-  // Mova o useState para dentro do componente
-  const [categories, setCategories] = useState<Category[]>([]); // Estado local para o nome
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  // Fetch categories and subcategories on component mount
+  // Buscar categorias na montagem do componente
   useEffect(() => {
+
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/category");
-        if (!response.ok) {
-          throw new Error("Erro ao buscar categorias.");
-        }
-        const data: Category[] = await response.json(); // Tipo esperado do endpoint
-        setCategories(data);
+        const response = await axiosInstance.get<Category[]>("/api/category");
+        const formattedData = response.data.map((category) => ({
+          ...category,
+          id: String(category.id), // Converte id para string
+        }));
+        setCategories(formattedData);
       } catch (error) {
         console.error("Erro ao carregar categorias:", error);
       }
     };
+
 
     fetchCategories();
   }, []);
 
-  // Função para atualizar o username
-  const handleCategorySubcategoryChange = (idCategory: string, idSubCategory: string) => {
-    console.log('category', idCategory)
-    console.log('category', idSubCategory)
-    fetchAddCategories(idCategory)
-    fetchAddSubCategories(idSubCategory)
-    // setAddress(idCategory);
+  // Função para manipular a escolha da categoria/subcategoria
+  const handleCategorySubcategoryChange = async (idCategory: string, idSubCategory: string) => {
+    console.log("category:", idCategory);
+    console.log("subcategory:", idSubCategory);
+
+    await fetchAddCategories(idCategory);
+    await fetchAddSubCategories(idSubCategory);
   };
 
-      const fetchAddCategories = async (idCategory: string) => {
-        console.log('idCategory add worker', idCategory)
-     
-      let workedId = 0
-      try {
-        const response = await fetch(`http://localhost:8080/api/worker/${workedId}/addCategory`);
-        
-        if (!response.ok) {
-          throw new Error("Erro ao buscar categorias.");
-        }
-        const data: Category[] = await response.json(); // Tipo esperado do endpoint
-        setCategories(data);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      }
-    };
+  // Adicionar categoria ao trabalhador
+  const fetchAddCategories = async (idCategory: string) => {
+    console.log("Adicionando categoria ao trabalhador:", idCategory);
+    const workedId = 0;
 
-      const fetchAddSubCategories = async (idsubcategory: string) => {
-        console.log('idsubcategory add worker', idsubcategory)
+    try {
+      const response = await axiosInstance.post<Category[]>(`/api/worker/${workedId}/addCategory`, { idCategory });
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Erro ao adicionar categoria:", error);
+    }
+  };
 
-      let workedId = 0
-      try {
-        const response = await fetch(`http://localhost:8080/api/worker/${workedId}/subcategories`);
-        
-        if (!response.ok) {
-          throw new Error("Erro ao buscar categorias.");
-        }
-        const data: Category[] = await response.json(); // Tipo esperado do endpoint
-        setCategories(data);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      }
-    };
+  // Adicionar subcategoria ao trabalhador
+  const fetchAddSubCategories = async (idSubCategory: string) => {
+    console.log("Adicionando subcategoria ao trabalhador:", idSubCategory);
+    const workedId = 0;
+
+    try {
+      const response = await axiosInstance.post<Category[]>(`/api/worker/${workedId}/subcategories`, { idSubCategory });
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Erro ao adicionar subcategoria:", error);
+    }
+  };
 
   return (
     <>
