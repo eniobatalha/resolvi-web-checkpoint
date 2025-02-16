@@ -12,7 +12,7 @@ interface OrderStatusProps {
 }
 
 const OrderStatus: React.FC<OrderStatusProps> = ({
-                                                     title = 'titulo pedido aqui',
+                                                     title = 'Titulo aqui',
                                                      description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dignissim aliquam tellus ac ornare. Aliquam erat volutpat. In a turpis at massa vehicula venenatis at ut risus. Morbi sed tellus augue. Donec velit tellus, pellentesque in dignissim sed, sollicitudin ac odio. Duis in sagittis sapien, sed posuere justo. Orci.',
                                                      orderStatus = 'Em aberto',
                                                      price = 123,
