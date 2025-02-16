@@ -1,18 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
-import TagsPopulares from "@/components/organisms/TagsPopulares";
-import { CarouselWorkers } from "@/components/organisms/CarouselWorkers";
-import DownloadAppSection from "@/components/organisms/DownloadAppSection";
-import { DataTableDemo } from "@/components/organisms/ListaInfo";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EditeProfile } from "@/components/organisms/EditProfile";
-import { GraphicProfile } from "@/components/organisms/GraphicProfile";
-import { Card } from "@/components/ui/card";
-import { FaStar } from "react-icons/fa";
-import Menu from "@/components/organisms/Menu";
-import Footer from "@/components/organisms/Footer";
-import { EditeAddress } from "@/components/organisms/EditAddress";
 import { CarouselCategory } from "@/components/organisms/CarouselCategory";
 
 interface CategoriesProps {
@@ -30,6 +18,7 @@ interface Category {
   name: string;
   subcategories: Subcategory[];
 }
+
 
 const CategoryPage = () => {
   // Mova o useState para dentro do componente
@@ -100,7 +89,6 @@ const CategoryPage = () => {
     <>
       <MenuCompleto />
       <div className="flex min-h-screen">
-        <Menu />
         <main className="flex-1 bg-white overflow-y-auto">
           <div className="space-y-12">
             <div className="flex p-10 justify-center items-center">

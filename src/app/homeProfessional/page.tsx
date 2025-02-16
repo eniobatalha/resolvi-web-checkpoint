@@ -123,7 +123,7 @@ const TesteHome = () => {
                     </div>
                 </main>
             </div>
-            <Footer profissional={false}/>
+            <Footer profissional={true}/>
         </>
     );
 };

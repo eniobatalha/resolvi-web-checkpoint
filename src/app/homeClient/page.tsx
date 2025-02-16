@@ -4,7 +4,6 @@ import Footer from "@/components/organisms/Footer";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import MenuCategoria from "@/components/organisms/MenuCategoria";
 import HomeUserNormal from "@/components/organisms/HomeUserNormal";
-import HomeProfessional from "@/components/organisms/HomeProfessional";
 import ProtectedRoutes from "../ProtectedRoutes";
 
 const HomePage = () => {
@@ -21,7 +20,7 @@ const HomePage = () => {
                     <HomeUserNormal/>
                 </div>
 
-                <Footer />
+                <Footer profissional={false} />
             </div>
         </ProtectedRoutes>
     );

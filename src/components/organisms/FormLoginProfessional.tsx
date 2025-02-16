@@ -51,6 +51,7 @@ const FormLogin: React.FC = () => {
       localStorage.setItem("name", userInfo.name);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("role", userInfo.role);
+      localStorage.setItem("id", userInfo.id)
 
       toast({
         title: "Login bem-sucedido",
@@ -80,7 +81,8 @@ const FormLogin: React.FC = () => {
       // Envia o token no corpo da requisição usando axiosInstance
       const response = await axiosInstance.post("/api/worker/google", { token });
   
-      // Axios já retorna os dados em response.data
+      
+
       return response.data;
   
     } catch (error) {
