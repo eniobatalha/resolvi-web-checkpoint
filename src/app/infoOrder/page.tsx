@@ -95,7 +95,7 @@ const InfoOrder = () => {
 
             </div>
 
-            <Footer/>
+            <Footer profissional={false}/>
         </>
     );
 };

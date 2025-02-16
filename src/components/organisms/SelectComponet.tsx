@@ -13,7 +13,7 @@ import {
 interface selectprop {
   type: string;
   options: { id: string; name: string }[];
-  handleOptionChange: (value: any) => void;
+  handleOptionChange: (value: string) => void; // Agora garante que recebe uma string
 }
 
 export function SelectOptions({
@@ -22,15 +22,15 @@ export function SelectOptions({
   handleOptionChange,
 }: selectprop) {
   return (
-    <Select onValueChange={(e: any) => handleOptionChange(e)} >
+    <Select onValueChange={(e) => handleOptionChange(e)}>
       <SelectTrigger className="w-[270px]">
-        <SelectValue placeholder={"Selecione a " + type} />
+        <SelectValue placeholder={`Selecione a ${type}`} />
       </SelectTrigger>
       <SelectContent>
-        <SelectGroup >
+        <SelectGroup>
           <SelectLabel>{type}</SelectLabel>
           {options?.map((option, index) => (
-            <SelectItem key={index + 1} value={option}>
+            <SelectItem key={index + 1} value={option.id}>
               {option.name}
             </SelectItem>
           ))}

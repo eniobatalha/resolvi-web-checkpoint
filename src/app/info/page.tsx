@@ -58,7 +58,7 @@ const InfoPage = () => {
                         {/* Componente de Tags Populares */}
                         <TagsPopulares />
 
-                        <DataTableDemo/>
+                        <DataTableDemo type={""} orders={[]}/>
 
                         <div className="bg-slate-100 py-6 mb-4">
                             {/* Componente de Categorias */}

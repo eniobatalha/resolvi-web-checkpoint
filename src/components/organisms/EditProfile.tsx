@@ -13,12 +13,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function EditeProfile({ onNameChange, onUsernameChange, currentName, currentUsername }) {
+interface EditProfileProps {
+  onNameChange: (name: string) => void;
+  onUsernameChange: (username: string) => void;
+  currentName: string;
+  currentUsername: string;
+}
+
+export function EditeProfile({ onNameChange, onUsernameChange, currentName, currentUsername }: EditProfileProps) {
   const [newName, setNewName] = useState(currentName); // Estado local para o nome
   const [newUsername, setNewUsername] = useState(currentUsername); // Estado local para o username
 
-  const handleNameChange = (e) => setNewName(e.target.value);
-  const handleUsernameChange = (e) => setNewUsername(e.target.value);
+  const handleNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setNewName(e.target.value);
+  const handleUsernameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setNewUsername(e.target.value);
 
   const handleSave = () => {
     // Passa os novos valores para o componente pai

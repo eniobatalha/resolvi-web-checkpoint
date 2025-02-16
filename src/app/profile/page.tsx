@@ -13,6 +13,8 @@ import Menu from "@/components/organisms/Menu";
 import Footer from "@/components/organisms/Footer";
 import { EditeAddress } from "@/components/organisms/EditAddress";
 import { EditeCategory } from "@/components/organisms/EditCategory";
+import axiosInstance from "../../../axiosInstance";
+import axios from "axios";
 
 interface ProfileUserProps {
   name: string;
@@ -105,6 +107,136 @@ const ProfilePage = () => {
   const handleSubCategoryChange = (newSubCategory: any) => {
     setSubCategory(newSubCategory);
   };
+
+  // Fetch categories and subcategories on component mount
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        let clientId = 2;
+        const response = await fetch(
+          "http://localhost:8080/api/client/address/" + clientId
+        );
+        if (!response.ok) {
+          throw new Error("Erro ao buscar categorias.");
+        }
+        const data: [] = await response.json(); // Tipo esperado do endpoint
+        console.log("data", data);
+        // setCategories(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+    fetchAddress();
+  }, []);
+
+  // Fetch categories and subcategories on component mount
+  useEffect(() => {
+    // Função para buscar informações do usuário no endpoint Google
+    const fetchUserClient = async (token: string) => {
+      try {
+        let clientId = 0;
+        // Envia o token no corpo da requisição usando axiosInstance
+        const response = await axiosInstance.get(
+          "/api/client/" + clientId,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        // Axios já retorna os dados em response.data
+        return response.data;
+      } catch (error) {
+        console.error("Erro ao buscar ou criar usuário com Google:", error);
+
+        // Se for um erro do Axios, podemos extrair mais detalhes
+        if (axios.isAxiosError(error)) {
+          const serverMessage =
+            error.response?.data?.message || "Erro desconhecido no servidor";
+          throw new Error(
+            `Erro na comunicação com o servidor: ${serverMessage}`
+          );
+        }
+
+        throw new Error("Erro ao processar autenticação com Google");
+      }
+
+      fetchUserClient("");
+    };
+  }, []);
+
+  // Fetch categories and subcategories on component mount
+  useEffect(() => {
+    // Função para buscar informações do usuário no endpoint Google
+    const fetchClientAddress = async (token: string) => {
+      try {
+        let clientId = 0;
+        // Envia o token no corpo da requisição usando axiosInstance
+        const response = await axiosInstance.get(
+          "/api/client/address" + clientId,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        // Axios já retorna os dados em response.data
+        return response.data;
+      } catch (error) {
+        console.error("Erro ao buscar ou criar usuário com Google:", error);
+
+        // Se for um erro do Axios, podemos extrair mais detalhes
+        if (axios.isAxiosError(error)) {
+          const serverMessage =
+            error.response?.data?.message || "Erro desconhecido no servidor";
+          throw new Error(
+            `Erro na comunicação com o servidor: ${serverMessage}`
+          );
+        }
+
+        throw new Error("Erro ao processar autenticação com Google");
+      }
+
+      fetchClientAddress("");
+    };
+  }, []);
+
+  // Fetch categories and subcategories on component mount
+  useEffect(() => {
+    // Função para buscar informações do usuário no endpoint Google
+    const fetchAltClientAddress = async (token: string) => {
+      try {
+        let clientId = 0;
+        // Envia o token no corpo da requisição usando axiosInstance
+        const response = await axiosInstance.patch(
+          "/api/client/address" + clientId,
+          { 
+            headers: { Authorization: `Bearer ${token}` },
+            data: {
+              street: street,
+              city: city,
+              state: state,
+              postalCode: postalCode,
+              country: country
+            }
+          }
+        );
+
+        // Axios já retorna os dados em response.data
+        return response.data;
+      } catch (error) {
+        console.error("Erro ao buscar ou criar usuário com Google:", error);
+
+        // Se for um erro do Axios, podemos extrair mais detalhes
+        if (axios.isAxiosError(error)) {
+          const serverMessage =
+            error.response?.data?.message || "Erro desconhecido no servidor";
+          throw new Error(
+            `Erro na comunicação com o servidor: ${serverMessage}`
+          );
+        }
+
+        throw new Error("Erro ao processar autenticação com Google");
+      }
+
+      // fetchAltClientAddress("");
+    };
+  }, []);
 
   return (
     <>
@@ -283,7 +415,7 @@ function ProfileProfessional({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }
@@ -395,7 +527,7 @@ function ProfileUserNormal({
         {/* Seção de Download do App */}
         <DownloadAppSection />
       </div>
-      <Footer />
+      <Footer profissional={false} />
     </main>
   );
 }
