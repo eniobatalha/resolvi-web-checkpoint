@@ -3,10 +3,6 @@ import React, { useEffect, useState } from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import { CarouselCategory } from "@/components/organisms/CarouselCategory";
 
-interface CategoriesProps {
-  array: object;
-  handleIdCategoryChange: (value: string) => void;
-}
 
 interface Subcategory {
   id: number;
@@ -18,6 +14,7 @@ interface Category {
   name: string;
   subcategories: Subcategory[];
 }
+
 
 
 const CategoryPage = () => {
@@ -43,15 +40,14 @@ const CategoryPage = () => {
   }, []);
 
   // Função para atualizar o username
-  const handleCategorySubcategoryChange = (idCategory: string, idSubCategory: string) => {
-    console.log('category', idCategory)
-    console.log('category', idSubCategory)
-    fetchAddCategories(idCategory)
-    fetchAddSubCategories(idSubCategory)
-    // setAddress(idCategory);
+  const handleCategorySubcategoryChange = (idCategory: number, idSubCategory: number) => {
+    console.log('category', idCategory);
+    console.log('subcategory', idSubCategory);
+    fetchAddCategories(idCategory);
+    fetchAddSubCategories(idSubCategory);
   };
 
-      const fetchAddCategories = async (idCategory: string) => {
+      const fetchAddCategories = async (idCategory: number) => {
         console.log('idCategory add worker', idCategory)
      
       let workedId = 0
@@ -68,7 +64,7 @@ const CategoryPage = () => {
       }
     };
 
-      const fetchAddSubCategories = async (idsubcategory: string) => {
+      const fetchAddSubCategories = async (idsubcategory: number) => {
         console.log('idsubcategory add worker', idsubcategory)
 
       let workedId = 0

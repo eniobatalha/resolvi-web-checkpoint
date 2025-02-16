@@ -8,16 +8,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { stringify } from "querystring";
 
 interface subcategories {
-  id: string;
+  id: number;
   name: string;
 }
 
 interface CategoriesProps {
-  categories: { id: string; name: string; subcategories: subcategories[] }[];
-  handleCategorySubcategoryChange: (idCategory: string, idSubCategory: string) => void;
+  categories: { id: number; name: string; subcategories: subcategories[] }[];
+  handleCategorySubcategoryChange: (idCategory: number, idSubCategory: number) => void;
 }
 
 export function CarouselCategory({
@@ -30,8 +29,8 @@ export function CarouselCategory({
     name: string
   }
 
-  const [idCategory, setIdCategory] = React.useState('0'); // Estado local para o nome
-  const [idSubCategory, setIdSubCategory] = React.useState('0'); // Estado local para o nome
+  const [idCategory, setIdCategory] = React.useState(0);
+  const [idSubCategory, setIdSubCategory] = React.useState(0);
   const [subCategory, setSubCategory] = React.useState<subcateg[]>([]); // Estado local para o nome
 
   const handleIdCategoryChange = (choseCategory: any) => {
@@ -52,7 +51,7 @@ export function CarouselCategory({
       orientation="vertical"
       className="w-full max-w-xs"
     >
-      {idCategory == '0' ? 
+      {idCategory == 0 ? 
       <CarouselContent className="-mt-1 h-[200px]">
           {categories.map((category, index) => 
             <CarouselItem
