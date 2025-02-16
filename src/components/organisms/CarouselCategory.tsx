@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -9,97 +8,82 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-interface subcategories {
+interface Subcategory {
   id: number;
   name: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+  subcategories: Subcategory[];
+}
+
 interface CategoriesProps {
-  categories: { id: number; name: string; subcategories: subcategories[] }[];
+  categories: Category[];
   handleCategorySubcategoryChange: (idCategory: number, idSubCategory: number) => void;
 }
 
-export function CarouselCategory({
-  categories,
-  handleCategorySubcategoryChange,
-}: CategoriesProps) {
- 
-  interface subcateg {
-    id: string, 
-    name: string
-  }
-
+export function CarouselCategory({ categories, handleCategorySubcategoryChange }: CategoriesProps) {
   const [idCategory, setIdCategory] = React.useState(0);
   const [idSubCategory, setIdSubCategory] = React.useState(0);
-  const [subCategory, setSubCategory] = React.useState<subcateg[]>([]); // Estado local para o nome
+  const [subCategory, setSubCategory] = React.useState<Subcategory[]>([]);
+  const itemsPerPage = 6; // Exibir 6 categorias por vez (3 linhas x 2 colunas)
 
-  const handleIdCategoryChange = (choseCategory: any) => {
-    setIdCategory(choseCategory?.id);
-    setSubCategory(choseCategory?.subcategories);
+  const handleIdCategoryChange = (chosenCategory: Category) => {
+    setIdCategory(chosenCategory.id);
+    setSubCategory(chosenCategory.subcategories);
   };
 
-  const handleIdSubCategoryChange = (idSubCategory: any) => {
-    setIdSubCategory(idSubCategory);
-    handleCategorySubcategoryChange(idCategory, idSubCategory);
+  const handleIdSubCategoryChange = (subCategoryId: number) => {
+    setIdSubCategory(subCategoryId);
+    handleCategorySubcategoryChange(idCategory, subCategoryId);
   };
 
   return (
-    <Carousel
-      opts={{
-        align: "start",
-      }}
-      orientation="vertical"
-      className="w-full max-w-xs"
-    >
-      {idCategory == 0 ? 
-      <CarouselContent className="-mt-1 h-[200px]">
-          {categories.map((category, index) => 
-            <CarouselItem
-              onClick={() => handleIdCategoryChange(category)}
-              key={index}
-              className="pt-1 md:basis-1/2"
-            >
-              <div className="p-1">
-                <Card>
-                  <CardContent className="w-250 flex-col items-center justify-center p-6">
-                    <span className="text-3xl font-semibold">
-                      {category?.name}
-                    </span>
-
-                    <div className="flex truncate w-120 gap-1">
-                      {category?.subcategories.map((element, index) => (
-                        <p>{element.name}, </p>
+    <div className="w-full flex flex-col items-center">
+      <Carousel opts={{ align: "start" }} className="w-full max-w-2xl">
+        {idCategory === 0 ? (
+          <CarouselContent className="grid grid-cols-2 gap-4">
+            {categories.slice(0, itemsPerPage).map((category, index) => (
+              <CarouselItem
+                onClick={() => handleIdCategoryChange(category)}
+                key={index}
+                className="cursor-pointer transform transition-all hover:scale-105"
+              >
+                <Card className="shadow-lg rounded-lg bg-white">
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    <span className="text-lg font-semibold">{category.name}</span>
+                    <div className="text-xs text-gray-600 text-center">
+                      {category.subcategories.map((element, idx) => (
+                        <span key={idx} className="mr-2">{element.name},</span>
                       ))}
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </CarouselItem>
-          )}
-        </CarouselContent>
-       : 
-        <CarouselContent className="-mt-1 h-[200px]">
-          {subCategory.map((subcategories, index) => (
-            <CarouselItem
-              onClick={() => handleIdSubCategoryChange(subcategories?.id)}
-              key={index}
-              className="pt-1 md:basis-1/2"
-            >
-              <div className="p-1">
-                <Card>
-                  <CardContent className="w-250 flex-col items-center justify-center p-6">
-                    <span className="text-3xl font-semibold">
-                      {subcategories?.name}
-                    </span>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        ) : (
+          <CarouselContent className="grid grid-cols-2 gap-4">
+            {subCategory.map((subcategory, index) => (
+              <CarouselItem
+                onClick={() => handleIdSubCategoryChange(subcategory.id)}
+                key={index}
+                className="cursor-pointer transform transition-all hover:scale-105"
+              >
+                <Card className="shadow-lg rounded-lg bg-white">
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    <span className="text-lg font-semibold">{subcategory.name}</span>
                   </CardContent>
                 </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      }
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        )}
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
   );
 }
