@@ -1,7 +1,7 @@
 "use client"
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import MenuCategoria from "@/components/organisms/MenuCategoria";
-import Menu from "@/components/organisms/Menu";
+import Menu from "@/components/organisms/SidebarClient";
 import React from "react";
 import ProfessionalListComponent from "@/components/organisms/ProfessionalListComponent";
 import Footer from "@/components/organisms/Footer";

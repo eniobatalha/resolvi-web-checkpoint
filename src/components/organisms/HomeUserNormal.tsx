@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Menu from "@/components/organisms/Menu";
+import Menu from "@/components/organisms/SidebarClient";
 import HeroSection from "@/components/organisms/HeroSection";
 import { FiSearch } from "react-icons/fi";
 import { Input } from "@/components/ui/input";

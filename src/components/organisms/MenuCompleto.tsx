@@ -44,7 +44,7 @@ const MenuCompleto: React.FC = () => {
     localStorage.removeItem("name");
     localStorage.removeItem("role");
 
-    router.push("/login");
+    router.push("/");
   };
 
   return (

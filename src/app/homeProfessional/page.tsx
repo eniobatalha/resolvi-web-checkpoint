@@ -1,4 +1,4 @@
-import Menu from "@/components/organisms/Menu";
+import Menu from "@/components/organisms/SidebarClient";
 import HeroSectionProfessional from "@/components/organisms/HeroSectionProfessional";
 import {FiSearch} from "react-icons/fi";
 import {Input} from "@/components/ui/input";
