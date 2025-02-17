@@ -34,38 +34,35 @@ const FormLogin: React.FC = () => {
 
   const loginWithGoogle = async () => {
     try {
-      // Faz a autenticação com o Google
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
-      // Obtém o accessToken do Firebase
       const accessToken = await user.getIdToken();
 
       console.log("Firebase AccessToken:", accessToken);
 
-      // Faz a requisição para o endpoint correto
       const userInfo = await fetchUserWithGoogle(accessToken);
 
-      // Salva as informações no localStorage
+      // Salva informações no localStorage
       localStorage.setItem("token", accessToken);
       localStorage.setItem("name", userInfo.name);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("role", userInfo.role);
+      localStorage.setItem("id", userInfo.id);
 
       toast({
         title: "Login bem-sucedido",
-        description: "Redirecionando para a página inicial...",
+        description: "Redirecionando...",
         variant: "default",
       });
 
-      // Redireciona de acordo com a role
-      if (userInfo.role === "Client") {
-        router.push("/home");
-      } else if (userInfo.role === "Worker") {
-        router.push("/home-worker");
+      // Verifica se o usuário tem uma subcategoria associada
+      if (!userInfo.subcategory || userInfo.subcategory.length === 0) {
+        router.push("/category"); // Redireciona para escolher categoria/subcategoria
+      } else {
+        router.push("/homeProfessional"); // Redireciona para a home normal
       }
     } catch (error) {
-      console.error("Erro ao autenticar ou buscar usuário com Google:", error);
+      console.error("Erro ao autenticar com Google:", error);
       toast({
         title: "Erro",
         description: "Ocorreu um erro ao autenticar com o Google.",
@@ -74,24 +71,26 @@ const FormLogin: React.FC = () => {
     }
   };
 
+
   // Função para buscar informações do usuário no endpoint Google
   const fetchUserWithGoogle = async (token: string) => {
     try {
       // Envia o token no corpo da requisição usando axiosInstance
       const response = await axiosInstance.post("/api/worker/google", { token });
-  
-      // Axios já retorna os dados em response.data
+
+
+
       return response.data;
-  
+
     } catch (error) {
       console.error("Erro ao buscar ou criar usuário com Google:", error);
-      
+
       // Se for um erro do Axios, podemos extrair mais detalhes
       if (axios.isAxiosError(error)) {
         const serverMessage = error.response?.data?.message || "Erro desconhecido no servidor";
         throw new Error(`Erro na comunicação com o servidor: ${serverMessage}`);
       }
-      
+
       throw new Error("Erro ao processar autenticação com Google");
     }
   };
@@ -114,29 +113,31 @@ const FormLogin: React.FC = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Pega o accessToken do Firebase
       const token = await user.getIdToken();
 
       console.log("Firebase AccessToken:", token);
 
-      // Etapa adicional: Obter informações do usuário a partir do token
       const userInfo = await fetchUserInfo(token);
 
-      console.log(userInfo)
       // Salvar informações no localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("name", userInfo.name);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("role", userInfo.role);
+      localStorage.setItem("id", userInfo.id);
 
       toast({
         title: "Login bem-sucedido",
-        description: "Redirecionando para a página inicial...",
+        description: "Redirecionando...",
         variant: "default",
       });
 
-      router.push("/home");
+      // Verifica se o usuário tem uma subcategoria associada
+      if (!userInfo.subcategory || userInfo.subcategory.length === 0) {
+        router.push("/category"); // Redireciona para escolher categoria/subcategoria
+      } else {
+        router.push("/homeProfessional"); // Redireciona para a home normal
+      }
     } catch (error) {
       console.error(error);
       toast({
@@ -147,18 +148,19 @@ const FormLogin: React.FC = () => {
     }
   };
 
+
   const fetchUserInfo = async (token: string) => {
     try {
-      const response = await axiosInstance.post("/api/worker/login-email",{ token });
-  
+      const response = await axiosInstance.post("/api/worker/login-email", { token });
+
       return response.data;
-  
+
     } catch (error) {
       // Tratamento específico para erros HTTP 4xx/5xx
       if (axios.isAxiosError(error) && error.response) {
         throw new Error("Usuário não encontrado.");
       }
-      
+
       // Mantém o erro original para outros tipos de erros (rede, etc)
       throw error;
     }

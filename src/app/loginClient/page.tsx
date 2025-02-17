@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 //import { useRouter } from "next/navigation";
 //import { useToast } from "@/hooks/use-toast";
-import FormLogin from "@/components/organisms/FormLogin";
+import FormLogin from "@/components/organisms/FormLoginClient";
 import FormRegister from "@/components/organisms/FormRegister";
 
 const AuthPage = () => {

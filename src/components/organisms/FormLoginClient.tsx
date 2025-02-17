@@ -49,6 +49,7 @@ const FormLogin: React.FC = () => {
       localStorage.setItem("name", userInfo.name);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("role", userInfo.role);
+      localStorage.setItem("clientId", userInfo.id);
 
       toast({
         title: "Login bem-sucedido",
@@ -56,12 +57,8 @@ const FormLogin: React.FC = () => {
         variant: "default",
       });
 
-      // Redireciona de acordo com a role
-      if (userInfo.role === "Client") {
-        router.push("/home");
-      } else if (userInfo.role === "Worker") {
-        router.push("/home-worker");
-      }
+        router.push("/homeClient");
+
     } catch (error) {
       console.error("Erro ao autenticar ou buscar usuário com Google:", error);
       toast({
@@ -127,6 +124,7 @@ const FormLogin: React.FC = () => {
       localStorage.setItem("name", userInfo.name);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("role", userInfo.role);
+      localStorage.setItem("clientId", userInfo.id);
 
       toast({
         title: "Login bem-sucedido",
@@ -134,7 +132,7 @@ const FormLogin: React.FC = () => {
         variant: "default",
       });
 
-      router.push("/home");
+      router.push("/homeClient");
     } catch (error) {
       console.error(error);
       toast({

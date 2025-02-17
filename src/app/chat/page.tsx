@@ -5,6 +5,7 @@ import MenuCompleto from "@/components/organisms/MenuCompleto";
 import MenuCategoria from "@/components/organisms/MenuCategoria";
 import HomeUserNormal from "@/components/organisms/HomeUserNormal";
 import ProtectedRoutes from "../ProtectedRoutes";
+import ChatApp from "@/components/organisms/ChatApp";
 
 const HomePage = () => {
     // Mova o useState para dentro do componente
@@ -16,8 +17,7 @@ const HomePage = () => {
             <div className={`flex flex-col bg-red-900 ${!user ? "h-lvh" : "h-full"}`}>
                 <div>
                     <MenuCompleto />
-                    <MenuCategoria />
-                    <HomeUserNormal/>
+                    <ChatApp/>
                 </div>
 
                 <Footer profissional={false} />
