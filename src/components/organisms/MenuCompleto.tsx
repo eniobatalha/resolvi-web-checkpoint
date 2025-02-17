@@ -36,6 +36,8 @@ const MenuCompleto: React.FC = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("name");
     localStorage.removeItem("role");
+    localStorage.removeItem("id");
+    localStorage.removeItem("clientId");
     router.push("/");
   };
 

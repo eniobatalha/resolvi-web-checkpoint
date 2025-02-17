@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
@@ -28,11 +28,11 @@ interface Worker {
 }
 
 const ProfissionalList = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const categoryId = searchParams.get("categoryId");
-  const subcategoryId = searchParams.get("subcategoryId");
 
+  // Estados
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [subcategoryId, setSubcategoryId] = useState<string | null>(null);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -41,6 +41,15 @@ const ProfissionalList = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+
+  // Captura os parâmetros da URL manualmente (sem `useSearchParams()`)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setCategoryId(params.get("categoryId"));
+      setSubcategoryId(params.get("subcategoryId"));
+    }
+  }, []);
 
   // Buscar categorias no carregamento
   useEffect(() => {
@@ -60,12 +69,12 @@ const ProfissionalList = () => {
 
   // Buscar trabalhadores conforme a categoria/subcategoria da URL
   useEffect(() => {
+    if (!categoryId && !subcategoryId) return;
+
+    setIsLoading(true);
+    setError(null);
+
     const fetchWorkers = async () => {
-      if (!categoryId && !subcategoryId) return;
-
-      setIsLoading(true);
-      setError(null);
-
       try {
         let apiUrl = subcategoryId
           ? `http://localhost:8080/api/worker/subcategory/${subcategoryId}`

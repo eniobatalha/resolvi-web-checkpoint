@@ -1,14 +1,15 @@
 import Menu from "@/components/organisms/SidebarClient";
 import HeroSectionProfessional from "@/components/organisms/HeroSectionProfessional";
-import {FiSearch} from "react-icons/fi";
-import {Input} from "@/components/ui/input";
+import { FiSearch } from "react-icons/fi";
+import { Input } from "@/components/ui/input";
 import TagsPopulares from "@/components/organisms/TagsPopulares";
-import {CarouselWorkers} from "@/components/organisms/CarouselWorkers";
+import { CarouselWorkers } from "@/components/organisms/CarouselWorkers";
 import DownloadAppSection from "@/components/organisms/DownloadAppSection";
 import React from "react";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import Footer from "@/components/organisms/Footer";
 import TipsProfessional from "@/components/organisms/TipsProfessional";
+import SidebarWorker from "@/components/organisms/SiderbarWorker";
 
 
 const TesteHome = () => {
@@ -16,7 +17,7 @@ const TesteHome = () => {
         <>
             <MenuCompleto />
             <div className="flex min-h-screen">
-                <Menu />
+                <SidebarWorker />
 
                 <main className="flex-1 bg-white overflow-y-auto">
                     <div className="space-y-8">
@@ -24,7 +25,7 @@ const TesteHome = () => {
 
 
                         <div className="relative flex items-center w-3/4 mx-auto">
-                            <FiSearch className="absolute left-4 text-gray-500" size={20}/>
+                            <FiSearch className="absolute left-4 text-gray-500" size={20} />
                             <Input
                                 type="text"
                                 placeholder="Procure serviços ou clientes próximos"
@@ -45,11 +46,11 @@ const TesteHome = () => {
                         </div>
 
                         <div>
-                            <DownloadAppSection/>
+                            <DownloadAppSection />
                         </div>
 
                         <div className="flex justify-evenly items-center py-5">
-                            <img src="/img/workes-profile.jpg" className="w-[30%]" alt="Profissional Resolvi"/>
+                            <img src="/img/workes-profile.jpg" className="w-[30%]" alt="Profissional Resolvi" />
                             <div className="h-[50vh] flex flex-col justify-center">
                                 <h1 className="text-6xl text-black">
                                     Benefícios de trabalhar com a <span className="text-indigo-900 font-bold">Resolvi</span>
@@ -71,7 +72,7 @@ const TesteHome = () => {
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-indigo-900">Serviços em até 20km de você</h1>
                             </div>
-                            <CarouselWorkers/>
+                            <CarouselWorkers />
                         </div>
 
                         <div className="py-6 mb-4 flex flex-col justify-between items-center">
@@ -117,13 +118,13 @@ const TesteHome = () => {
                             </div>
                         </div>
 
-{/*                        <div>
+                        {/*                        <div>
                             <ServicesSection/>
                         </div>*/}
                     </div>
                 </main>
             </div>
-            <Footer profissional={true}/>
+            <Footer profissional={true} />
         </>
     );
 };
