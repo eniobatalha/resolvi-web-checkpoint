@@ -7,7 +7,7 @@ import Footer from "@/components/organisms/Footer";
 import axiosInstance from "../../../axiosInstance";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation"; // Para navegação
+import { useRouter } from "next/navigation";
 
 interface Worker {
   id: number;
@@ -24,7 +24,7 @@ interface Order {
   categoryName: string;
   subcategoryName: string;
   startDate: string;
-  registeredWorkers: Worker[];
+  registeredWorkers?: Worker[];
 }
 
 const OrderPage = () => {
@@ -34,7 +34,7 @@ const OrderPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Para navegação
+  const router = useRouter();
 
   useEffect(() => {
     const storedName = localStorage.getItem("name");
@@ -49,7 +49,9 @@ const OrderPage = () => {
 
     axiosInstance
       .get(`/api/order/client-orders/${clientId}`)
-      .then((response) => setOrders(response.data))
+      .then((response) => {
+        setOrders(response.data);
+      })
       .catch(() => setError("Erro ao carregar ordens"))
       .finally(() => setLoading(false));
   }, [clientId]);
@@ -81,12 +83,12 @@ const OrderPage = () => {
     <>
       <MenuCompleto />
       <Menu />
-      <main className="flex">
-        <div className="w-[70%] h-screen flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto">
-            <div className="grid grid-cols-2 gap-8 pt-4 px-6">
+      <main className="flex pl-[250px]"> {/* 🔹 Espaço lateral para o menu */}
+        <div className="w-full h-screen flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto px-6 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {orders.map((order) => (
-                <div key={order.id}>
+                <div key={order.id} className="bg-white shadow rounded-lg p-4">
                   <OrderStatus
                     title={order.serviceName}
                     description={order.description}
@@ -95,13 +97,13 @@ const OrderPage = () => {
                     category={`${order.categoryName} > ${order.subcategoryName}`}
                     className="w-full"
                   />
-                  {/* Botão para abrir o modal de profissionais interessados */}
+
                   <Button
                     className="mt-2 w-full"
                     variant="outline"
                     onClick={() => openWorkerModal(order)}
                   >
-                    Ver profissionais interessados ({order.registeredWorkers.length})
+                    Ver profissionais interessados
                   </Button>
                 </div>
               ))}
@@ -110,38 +112,6 @@ const OrderPage = () => {
         </div>
       </main>
       <Footer profissional={false} />
-
-      {/* Modal de seleção de workers */}
-      {selectedOrder && (
-        <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Selecionar um Profissional</DialogTitle>
-            </DialogHeader>
-            {selectedOrder.registeredWorkers.length > 0 ? (
-              selectedOrder.registeredWorkers.map((worker) => (
-                <div key={worker.id} className="flex items-center justify-between p-2 border-b">
-                  <img
-                    src={worker.profilePic}
-                    alt={worker.name}
-                    className="w-10 h-10 rounded-full"
-                  />
-                  {/* Nome clicável para ver perfil */}
-                  <span
-                    className="flex-1 ml-2 cursor-pointer text-indigo-600 hover:underline"
-                    onClick={() => router.push(`/workerProfile/${worker.id}`)}
-                  >
-                    {worker.name}
-                  </span>
-                  <Button onClick={() => selectWorker(worker.id)}>Contratar</Button>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-600 text-center py-4">Nenhum profissional se inscreveu ainda.</p>
-            )}
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 };
