@@ -42,12 +42,39 @@ const ChatApp = () => {
   const [currentUser, setCurrentUser] = useState<{id: string, name: string} | null>(null);
 
   useEffect(() => {
-    const id = localStorage.getItem("id");
+    const role = localStorage.getItem("role");
     const name = localStorage.getItem("name");
-    if (id && name) {
-      setCurrentUser({ id, name });
+  
+    let id: string | null = null;
+  
+    if (role === "Client") {
+      id = localStorage.getItem("clientId");
+    } else if (role === "Worker") {
+      id = localStorage.getItem("workerId");
     }
+  
+    // Verificação robusta dos valores
+    if (id && name) {
+      setCurrentUser({
+        id: id.trim(), // Remove espaços em branco
+        name: name.trim()
+      });
+    } else {
+      console.error("Dados do usuário incompletos ou inválidos:");
+      console.log("Role:", role);
+      console.log("ID:", id);
+      console.log("Name:", name);
+    }
+  
   }, []);
+
+  useEffect(() => {
+    console.log('Chats atualizados:', chats);
+  }, [chats]);
+  
+  useEffect(() => {
+    console.log('Usuário atual:', currentUser);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!currentUser?.id) return;
@@ -87,21 +114,31 @@ const ChatApp = () => {
     const newChats: Chat[] = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
-      newChats.push({
+      console.log('Documento recebido:', doc.id, data); // Log detalhado
+      
+      // Converter IDs para string para garantir compatibilidade
+      const chat = {
         id: doc.id,
-        clientId: data.participants.clientId,
-        workerId: data.participants.workerId,
+        clientId: String(data.participants.clientId),
+        workerId: String(data.participants.workerId),
         status: data.status,
         orderId: data.orderId,
         clientName: data.clientName,
         workerName: data.workerName
-      });
+      };
+  
+      // Verificar se o chat já existe
+      if (!chats.some(c => c.id === chat.id)) {
+        newChats.push(chat);
+      }
     });
-    
-    setChats(prev => [
-      ...prev.filter(p => !newChats.some(n => n.id === p.id)),
-      ...newChats
-    ]);
+  
+    setChats(prev => {
+      const updatedChats = [...prev, ...newChats];
+      // Remover duplicatas usando Set
+      return Array.from(new Set(updatedChats.map(c => c.id)))
+        .map(id => updatedChats.find(c => c.id === id)!);
+    });
   };
 
   useEffect(() => {
@@ -172,31 +209,37 @@ const ChatApp = () => {
       <SidebarClient />
       
       {/* Lista de conversas */}
-      <div className="w-1/3 border-r border-gray-300 flex flex-col">
-        <div className="h-16 bg-gray-200 flex items-center px-4">
-          <h2 className="text-xl font-bold">Minhas Conversas</h2>
-        </div>
+      <div className="flex-1 overflow-y-auto">
+  {chats.length === 0 && (
+    <div className="p-4 text-center text-gray-500">
+      Nenhum chat disponível. Seus chats aparecerão aqui quando houver conversas ativas.
+    </div>
+  )}
 
-        <div className="flex-1 overflow-y-auto">
-          {chats.map((chat) => (
-            <div
-              key={chat.id}
-              className={`p-4 cursor-pointer border-b hover:bg-gray-200 ${
-                selectedChatId === chat.id ? "bg-gray-300" : ""
-              }`}
-              onClick={() => setSelectedChatId(chat.id)}
-            >
-              <p className="font-semibold">{getChatTitle(chat)}</p>
-              <p className="text-sm">Ordem #{chat.orderId}</p>
-              <p className={`text-sm ${
-                chat.status === 'active' ? 'text-green-600' : 'text-red-600'
-              }`}>
-                Status: {chat.status === 'active' ? 'Ativo' : 'Fechado'}
-              </p>
-            </div>
-          ))}
+  {chats.map((chat) => {
+    console.log('Renderizando chat:', chat); // Log para verificar os dados
+    return (
+      <div
+        key={chat.id}
+        className={`p-4 cursor-pointer border-b hover:bg-gray-200 ${
+          selectedChatId === chat.id ? "bg-gray-300" : ""
+        }`}
+        onClick={() => setSelectedChatId(chat.id)}
+      >
+        <p className="font-semibold">{getChatTitle(chat)}</p>
+        <p className="text-sm">Ordem #{chat.orderId}</p>
+        <div className="flex items-center mt-1">
+          <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
+            chat.status === 'active' ? 'bg-green-500' : 'bg-red-500'
+          }`}></span>
+          <p className="text-sm text-gray-500">
+            {chat.status === 'active' ? 'Online' : 'Offline'}
+          </p>
         </div>
       </div>
+    );
+  })}
+</div>
 
       {/* Área do chat */}
       <div className="w-2/3 flex flex-col">
