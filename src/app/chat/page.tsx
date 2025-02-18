@@ -15,6 +15,8 @@ import { Timestamp } from "firebase/firestore";
  // Ajuste o caminho conforme necessário
 import SidebarClient from "@/components/organisms/SidebarClient";
 import { db } from "../../../firebaseinitialize";
+import MenuCompleto from "@/components/organisms/MenuCompleto";
+import Footer from "@/components/organisms/Footer";
 
 interface Message {
   id: string;
@@ -40,6 +42,7 @@ const ChatApp = () => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentUser, setCurrentUser] = useState<{id: string, name: string} | null>(null);
+  const [isProfessional, setProfessional ] = useState<boolean>(false)
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -205,7 +208,10 @@ const ChatApp = () => {
   };
 
   return (
+    <>
+          <MenuCompleto/>
     <div className="flex h-screen w-full bg-gray-100">
+
       <SidebarClient />
       
       {/* Lista de conversas */}
@@ -303,6 +309,8 @@ const ChatApp = () => {
         </div>
       </div>
     </div>
+          <Footer profissional={ isProfessional }/>
+    </>
   );
 };
 
