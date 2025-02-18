@@ -22,13 +22,15 @@ const MenuCompleto: React.FC = () => {
     nome: "Usuário",
     email: "",
     avatarUrl: "",
+    role: ""
   });
 
   useEffect(() => {
     const nome = localStorage.getItem("name") || "Usuário";
     const email = localStorage.getItem("email") || "";
+    const role = localStorage.getItem("role") || "";
     const avatarUrl = "";
-    setUser({ nome, email, avatarUrl });
+    setUser({ nome, email, avatarUrl, role });
   }, []);
 
   const handleLogout = () => {
@@ -85,7 +87,7 @@ const MenuCompleto: React.FC = () => {
               <span className="text-gray-500 text-sm">{user.email}</span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/gerenciar-dados")}>
+            <DropdownMenuItem onClick={() => router.push(user?.role == 'Client' ? "/profileClient":"/profileWorker")}>
               Gerenciar Dados
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/gerenciar-endereco")}>

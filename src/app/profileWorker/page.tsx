@@ -9,12 +9,14 @@ import ProfileWorker from "@/components/organisms/ProfileWorker";
 import ProfileClient from "@/components/organisms/ProfileClient";
 
 export default function ProfilePage() {
+  
+
   return (
     <>
       <MenuCompleto />
       <div className="flex min-h-screen">
         <Menu />
-        <ProfileClient />
+          <ProfileWorker/>
       </div>
       <Footer profissional={false} />
     </>
