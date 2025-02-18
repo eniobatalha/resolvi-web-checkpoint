@@ -1,10 +1,19 @@
 "use client";
+import { useState, useEffect } from "react";
 import OrderStatus from "@/components/organisms/OrderStatus";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import Menu from "@/components/organisms/SidebarClient";
-import React, { useEffect, useState } from "react";
 import Footer from "@/components/organisms/Footer";
 import axiosInstance from "../../../axiosInstance";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation"; // Para navegação
+
+interface Worker {
+  id: number;
+  name: string;
+  profilePic: string;
+}
 
 interface Order {
   id: number;
@@ -13,17 +22,19 @@ interface Order {
   price: number;
   status: string;
   categoryName: string;
-  subcategoryName: string
+  subcategoryName: string;
   startDate: string;
+  registeredWorkers: Worker[];
 }
 
 const OrderPage = () => {
   const [nomeClient, setNomeClient] = useState("Nome do Cliente");
   const [clientId, setClientId] = useState<number | null>(null);
-  const [orderId, setOrderId] = useState<number | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // Para navegação
 
   useEffect(() => {
     const storedName = localStorage.getItem("name");
@@ -34,96 +45,103 @@ const OrderPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (!clientId) return;
+    if (!clientId) return;
 
-      try {
-        const response = await axiosInstance.get(`/api/order/client-orders/${clientId}`);
-        setOrders(response.data);
-      } catch (err) {
-        setError("Erro ao carregar ordens");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
+    axiosInstance
+      .get(`/api/order/client-orders/${clientId}`)
+      .then((response) => setOrders(response.data))
+      .catch(() => setError("Erro ao carregar ordens"))
+      .finally(() => setLoading(false));
   }, [clientId]);
 
-  const formatCategory = (order: Order) => {
-    return order.subcategoryName 
-      ? `${order.categoryName} > ${order.subcategoryName}`
-      : order.categoryName;
+  const openWorkerModal = (order: Order) => {
+    setSelectedOrder(order);
   };
 
-  const fetchAskOrders = async (idOrder: string) => {
+  const selectWorker = async (workerId: number) => {
+    if (!selectedOrder) return;
 
     try {
-      const response = await axiosInstance.get(`/api/order/${idOrder}`);
-      // setOrders(response.data);
-      console.log('response', response)
+      await axiosInstance.post(`/api/order/${selectedOrder.id}/select-worker/${workerId}`);
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === selectedOrder.id ? { ...order, status: "Andamento" } : order
+        )
+      );
+      setSelectedOrder(null);
     } catch (err) {
-      setError("Erro ao carregar ordens");
-    } finally {
-      setLoading(false);
+      console.error("Erro ao selecionar worker:", err);
     }
   };
 
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500 p-4">{error}</div>;
-  }
+  if (loading) return <div>Carregando...</div>;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <>
       <MenuCompleto />
       <Menu />
       <main className="flex">
-        {/* Coluna lateral esquerda */}
-        <div className="w-[30%] px-10 flex flex-col items-center h-screen overflow-y-auto border-r-2 border-gray-100">
-          <div className="w-full py-10 flex flex-col items-center pl-20">
-            <div className="flex flex-col items-center justify-center py-10">
-              <img
-                className="rounded-full w-32 h-32 object-cover"
-                src="https://foxbombas.com.br/2020b/wp-content/uploads/2021/08/pexels-funny-foxy-pride-5872242-768x509.jpg"
-                alt="Professional"
-              />
-              <h2 className="text-indigo-900 text-2xl font-bold py-4">
-                {nomeClient}
-              </h2>
-            </div>
-          </div>
-        </div>
-
-        {/* Coluna direita */}
         <div className="w-[70%] h-screen flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
-            <div className="sticky top-[-10px] bg-white z-10 pb-4 px-4 pt-4">
-              <h2 className="text-4xl font-bold text-orange-500">
-                Ordens Em Progresso
-              </h2>
-            </div>
             <div className="grid grid-cols-2 gap-8 pt-4 px-6">
               {orders.map((order) => (
-                <OrderStatus
-                  key={order.id}
-                  title={order.serviceName}
-                  description={order.description}
-                  orderStatus={order.status}
-                  price={order.price}
-                  category={formatCategory(order)}
-                  buscarInformacao={() => fetchAskOrders(order?.id)}
-                  className="w-full"
-                />
+                <div key={order.id}>
+                  <OrderStatus
+                    title={order.serviceName}
+                    description={order.description}
+                    orderStatus={order.status}
+                    price={order.price}
+                    category={`${order.categoryName} > ${order.subcategoryName}`}
+                    className="w-full"
+                  />
+                  {/* Botão para abrir o modal de profissionais interessados */}
+                  <Button
+                    className="mt-2 w-full"
+                    variant="outline"
+                    onClick={() => openWorkerModal(order)}
+                  >
+                    Ver profissionais interessados ({order.registeredWorkers.length})
+                  </Button>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </main>
       <Footer profissional={false} />
+
+      {/* Modal de seleção de workers */}
+      {selectedOrder && (
+        <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Selecionar um Profissional</DialogTitle>
+            </DialogHeader>
+            {selectedOrder.registeredWorkers.length > 0 ? (
+              selectedOrder.registeredWorkers.map((worker) => (
+                <div key={worker.id} className="flex items-center justify-between p-2 border-b">
+                  <img
+                    src={worker.profilePic}
+                    alt={worker.name}
+                    className="w-10 h-10 rounded-full"
+                  />
+                  {/* Nome clicável para ver perfil */}
+                  <span
+                    className="flex-1 ml-2 cursor-pointer text-indigo-600 hover:underline"
+                    onClick={() => router.push(`/workerProfile/${worker.id}`)}
+                  >
+                    {worker.name}
+                  </span>
+                  <Button onClick={() => selectWorker(worker.id)}>Contratar</Button>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-600 text-center py-4">Nenhum profissional se inscreveu ainda.</p>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };
