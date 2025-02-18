@@ -79,17 +79,21 @@ const OrdersWorker = () => {
 
       const fetchOrders = async () => {
         try {
-          // 🔹 Faz a requisição correta para buscar as ordens pela subcategoria
+          console.log("🔹 Buscando ordens para subcategoria:", selectedSubcategory.id);
           const response = await axiosInstance.get(
             `/api/order/subcategory/${selectedSubcategory.id}`
           );
           const allOrders: Order[] = response.data;
 
-          // 🔹 Filtra apenas as ordens onde o worker **ainda não está registrado**
+          console.log("🔹 Dados da API:", allOrders);
+          console.log("🔹 ID do Worker:", workerId);
+
+          // 🔹 Evita erro caso `registeredWorkers` não esteja presente
           const availableOrders = allOrders.filter(order =>
-            !order.registeredWorkers.some(worker => worker.id === Number(workerId))
+            !order.registeredWorkers?.some(worker => worker.id === Number(workerId))
           );
 
+          console.log("🔹 Ordens filtradas:", availableOrders);
           setOrders(availableOrders);
         } catch (error) {
           setError("Nenhuma ordem disponível para esta subcategoria.");
@@ -101,6 +105,7 @@ const OrdersWorker = () => {
       fetchOrders();
     }
   }, [selectedSubcategory, workerId]);
+
 
   const registerOrder = async (orderId: string) => {
     if (!workerId) return;
