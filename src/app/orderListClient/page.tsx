@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import OrderStatus from "@/components/organisms/OrderStatus";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
@@ -8,7 +9,7 @@ import axiosInstance from "../../../axiosInstance";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast"; // 🔹 Importação do hook de toast
+import { useToast } from "@/hooks/use-toast"; // 🔹 Hook para mensagens de toast
 
 interface Worker {
   id: number;
@@ -37,7 +38,7 @@ const OrderPage = () => {
   const [showWorkerModal, setShowWorkerModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast(); // 🔹 Hook para exibir toasts
+  const { toast } = useToast(); // 🔹 Hook para mensagens de toast
   const router = useRouter();
 
   useEffect(() => {
@@ -53,9 +54,7 @@ const OrderPage = () => {
 
     axiosInstance
       .get(`/api/order/client-orders/${clientId}`)
-      .then((response) => {
-        setOrders(response.data);
-      })
+      .then((response) => setOrders(response.data))
       .catch(() => setError("Erro ao carregar ordens"))
       .finally(() => setLoading(false));
   }, [clientId]);
@@ -71,7 +70,6 @@ const OrderPage = () => {
     try {
       await axiosInstance.post(`/api/order/${selectedOrder.id}/select-worker/${workerId}`);
 
-      // Atualiza a ordem selecionada para "Andamento" e fecha o modal
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.id === selectedOrder.id ? { ...order, status: "Andamento" } : order
@@ -80,7 +78,6 @@ const OrderPage = () => {
 
       setShowWorkerModal(false);
 
-      // 🔹 Exibe um toast de sucesso
       toast({
         variant: "default",
         title: "Profissional Aceito!",
@@ -88,12 +85,35 @@ const OrderPage = () => {
       });
     } catch (err) {
       console.error("Erro ao selecionar trabalhador:", err);
-
-      // 🔹 Exibe um toast de erro
       toast({
         variant: "destructive",
         title: "Erro ao aceitar profissional",
         description: "Houve um problema ao tentar aceitar este profissional. Tente novamente.",
+      });
+    }
+  };
+
+  const concludeOrder = async (orderId: number) => {
+    try {
+      await axiosInstance.patch(`/api/order/${orderId}/conclude`);
+
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, status: "Pagamento Pendente" } : order
+        )
+      );
+
+      toast({
+        variant: "default",
+        title: "Serviço Finalizado!",
+        description: "O serviço foi concluído e está aguardando pagamento.",
+      });
+    } catch (err) {
+      console.error("Erro ao concluir ordem:", err);
+      toast({
+        variant: "destructive",
+        title: "Erro ao finalizar",
+        description: "Houve um problema ao tentar finalizar o serviço.",
       });
     }
   };
@@ -120,21 +140,30 @@ const OrderPage = () => {
                     className="w-full"
                   />
 
-                  {/* Exibir status da ordem abaixo do preço */}
                   <p className={`text-center mt-2 font-semibold ${
-                    order.status === "Aberto" ? "text-green-600" : "text-blue-600"
+                    order.status === "Aberto" ? "text-green-600" :
+                    order.status === "Andamento" ? "text-blue-600" :
+                    "text-gray-600"
                   }`}>
                     Status: {order.status}
                   </p>
 
-                  {/* Ocultar botão se a ordem estiver em andamento */}
-                  {order.status !== "Andamento" && (
+                  {order.status === "Aberto" && (
                     <Button
                       className="mt-2 w-full"
                       variant="outline"
                       onClick={() => openWorkerModal(order)}
                     >
                       Ver profissionais interessados
+                    </Button>
+                  )}
+
+                  {order.status === "Andamento" && (
+                    <Button
+                      className="mt-2 w-full bg-green-600 text-white"
+                      onClick={() => concludeOrder(order.id)}
+                    >
+                      Finalizar Serviço
                     </Button>
                   )}
                 </div>

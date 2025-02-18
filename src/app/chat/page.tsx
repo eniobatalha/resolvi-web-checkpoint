@@ -50,7 +50,7 @@ const ChatApp = () => {
     if (role === "Client") {
       id = localStorage.getItem("clientId");
     } else if (role === "Worker") {
-      id = localStorage.getItem("workerId");
+      id = localStorage.getItem("id");
     }
   
     // Verificação robusta dos valores
