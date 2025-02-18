@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FiSearch } from "react-icons/fi";
+// import { FiSearch } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import MenuCompleto from "@/components/organisms/MenuCompleto";
 import Footer from "@/components/organisms/Footer";
+import { ResolveProblem } from "@/components/organisms/ResolveProblem";
+import axiosInstance from "../../../axiosInstance";
 
 interface Subcategory {
   id: number;
@@ -36,11 +38,13 @@ const OrdersWorker = () => {
   const router = useRouter();
   const [workerId, setWorkerId] = useState<string | null>(null);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(null);
+  const [selectedSubcategory, setSelectedSubcategory] =
+    useState<Subcategory | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSubcategoryDialog, setShowSubcategoryDialog] = useState(false);
+  const [idOrder, setIdOrder] = useState<string | null>(null);
 
   useEffect(() => {
     // Recupera o ID do worker do localStorage
@@ -55,7 +59,9 @@ const OrdersWorker = () => {
     if (workerId) {
       const fetchWorkerData = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/worker/${workerId}`);
+          const response = await fetch(
+            `http://localhost:8080/api/worker/${workerId}`
+          );
           if (!response.ok) throw new Error("Erro ao buscar dados do worker.");
 
           const data: Worker = await response.json();
@@ -86,14 +92,19 @@ const OrdersWorker = () => {
 
       const fetchOrders = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/order/subcategory/${selectedSubcategory.id}`);
-          if (!response.ok) throw new Error("Nenhuma ordem disponível para esta subcategoria.");
+          const response = await fetch(
+            `http://localhost:8080/api/order/subcategory/${selectedSubcategory.id}`
+          );
+          if (!response.ok)
+            throw new Error("Nenhuma ordem disponível para esta subcategoria.");
 
           const data: Order[] = await response.json();
           setOrders(data);
         } catch (error) {
           console.error("Erro na busca:", error);
-          setError(error instanceof Error ? error.message : "Erro desconhecido");
+          setError(
+            error instanceof Error ? error.message : "Erro desconhecido"
+          );
         } finally {
           setIsLoading(false);
         }
@@ -103,15 +114,32 @@ const OrdersWorker = () => {
     }
   }, [selectedSubcategory]);
 
+  const fetchRegisterOrders = async (orderId: string) => {
+    console.log('orderId', orderId)
+    try {
+      const response = await axiosInstance.post(
+        `/api/order/${orderId}/register-worker/${workerId}`
+      );
+
+      console.log("Ordem criada:", response.data);
+      // router.push("/orderListClient");
+    } catch (error) {
+      console.error("Erro ao criar ordem:", error);
+    }
+  };
+
   return (
     <>
       <MenuCompleto />
+
       <div className="flex flex-col min-h-screen items-center">
         {/* Se houver mais de uma subcategoria, mostra o diálogo de escolha */}
         {showSubcategoryDialog && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-md shadow-md w-96">
-              <h2 className="text-xl font-bold text-indigo-900 mb-4">Escolha uma subcategoria</h2>
+              <h2 className="text-xl font-bold text-indigo-900 mb-4">
+                Escolha uma subcategoria
+              </h2>
               <ul>
                 {subcategories.map((subcategory) => (
                   <li
@@ -135,13 +163,17 @@ const OrdersWorker = () => {
           <div className="w-3/4 mt-6 text-center">
             <h2 className="text-2xl font-bold text-gray-900">
               Você está visualizando ordens para:{" "}
-              <span className="text-indigo-900">{selectedSubcategory.name}</span>
+              <span className="text-indigo-900">
+                {selectedSubcategory.name}
+              </span>
             </h2>
           </div>
         )}
 
         {/* Exibir resultado da busca */}
-        {isLoading && <p className="text-gray-600 mt-4">Carregando ordens...</p>}
+        {isLoading && (
+          <p className="text-gray-600 mt-4">Carregando ordens...</p>
+        )}
         {error && <p className="text-red-500 mt-4">{error}</p>}
 
         {orders.length > 0 && (
@@ -151,14 +183,33 @@ const OrdersWorker = () => {
                 <div
                   key={order.id}
                   className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition cursor-pointer"
-                  onClick={() => router.push(`/orderDetail/${order.id}`)}
+                  onClick={() => setIdOrder(`${order?.id}`)}
                 >
-                  <h3 className="text-center text-lg font-bold mt-4">{order.serviceName}</h3>
-                  <p className="text-center text-gray-600 mt-2">{order.categoryName} - {order.subcategoryName}</p>
-                  <p className="text-center text-gray-500 mt-2">{order.description}</p>
-                  <p className="text-center text-indigo-600 font-bold mt-2">R$ {order.price.toFixed(2)}</p>
-                  <p className="text-center text-gray-400 text-sm mt-2">Cliente: {order.clientName}</p>
-                  <p className="text-center text-gray-400 text-sm">Criado em: {order.startDate}</p>
+                  <h3 className="text-center text-lg font-bold mt-4">
+                    {order.serviceName}
+                  </h3>
+                  <p className="text-center text-gray-600 mt-2">
+                    {order.categoryName} - {order.subcategoryName}
+                  </p>
+                  <p className="text-center text-gray-500 mt-2">
+                    {order.description}
+                  </p>
+                  <p className="text-center text-indigo-600 font-bold mt-2">
+                    R$ {order.price.toFixed(2)}
+                  </p>
+                  <p className="text-center text-gray-400 text-sm mt-2">
+                    Cliente: {order.clientName}
+                  </p>
+                  <p className="text-center text-gray-400 text-sm">
+                    Criado em: {order.startDate}
+                  </p>
+
+                  <div className="text-center">
+                    <ResolveProblem
+                      ordemDescricao={order.description}
+                      confirmarInscricao={() => fetchRegisterOrders(order?.id)}
+                    />
+                  </div>
                 </div>
               ))}
             </div>

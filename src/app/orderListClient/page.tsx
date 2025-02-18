@@ -20,6 +20,7 @@ interface Order {
 const OrderPage = () => {
   const [nomeClient, setNomeClient] = useState("Nome do Cliente");
   const [clientId, setClientId] = useState<number | null>(null);
+  const [orderId, setOrderId] = useState<number | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +54,19 @@ const OrderPage = () => {
     return order.subcategoryName 
       ? `${order.categoryName} > ${order.subcategoryName}`
       : order.categoryName;
+  };
+
+  const fetchAskOrders = async (idOrder: string) => {
+
+    try {
+      const response = await axiosInstance.get(`/api/order/${idOrder}`);
+      // setOrders(response.data);
+      console.log('response', response)
+    } catch (err) {
+      setError("Erro ao carregar ordens");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -101,6 +115,7 @@ const OrderPage = () => {
                   orderStatus={order.status}
                   price={order.price}
                   category={formatCategory(order)}
+                  buscarInformacao={() => fetchAskOrders(order?.id)}
                   className="w-full"
                 />
               ))}
