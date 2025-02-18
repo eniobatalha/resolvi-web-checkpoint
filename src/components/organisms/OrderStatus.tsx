@@ -9,6 +9,7 @@ interface OrderStatusProps {
     className?: string;
     price?: number;
     category?: string;
+    buscarInformacao: () => void;
 }
 
 const OrderStatus: React.FC<OrderStatusProps> = ({
@@ -17,6 +18,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({
                                                      orderStatus = 'Em aberto',
                                                      price = 123,
                                                      category = 'auto',
+                                                     buscarInformacao
                                                  }) => {
     const statusColors: Record<OrderStatusType, string> = {
         'Em aberto': 'bg-blue-500',
@@ -26,7 +28,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({
     };
 
     return (
-        <div className="my-4 w-[640px] h-[240px] border rounded-[16px] shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="my-4 w-[640px] h-[240px] border rounded-[16px] shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" onClick={buscarInformacao} >
             <div>
                 <div className="px-4 pt-4">
                     <h2 className="font-bold text-indigo-900 text-[24px]">{title}</h2>
