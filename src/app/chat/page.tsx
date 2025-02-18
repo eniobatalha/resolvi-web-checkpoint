@@ -6,19 +6,15 @@ import {
   query, 
   where, 
   onSnapshot, 
-  addDoc, 
-  doc, 
-  getDoc,
-  Timestamp, 
-  getFirestore,
-  orderBy
+  addDoc,
+  orderBy,
+  QuerySnapshot,
+  DocumentData
 } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "../../../firebaseinitialize";
+import { Timestamp } from "firebase/firestore";
+ // Ajuste o caminho conforme necessário
 import SidebarClient from "@/components/organisms/SidebarClient";
-
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+import { db } from "../../../firebaseinitialize";
 
 interface Message {
   id: string;
@@ -46,44 +42,67 @@ const ChatApp = () => {
   const [currentUser, setCurrentUser] = useState<{id: string, name: string} | null>(null);
 
   useEffect(() => {
-    // Buscar usuário do localStorage
-    const id = localStorage.getItem("id") || "";
-    const name = localStorage.getItem("name") || "";
-    if (id) {
-      setCurrentUser({
-        id: id,
-        name: name
-      });
+    const id = localStorage.getItem("id");
+    const name = localStorage.getItem("name");
+    if (id && name) {
+      setCurrentUser({ id, name });
     }
   }, []);
 
   useEffect(() => {
     if (!currentUser?.id) return;
 
-    const q = query(
+    const unsubscribeCallbacks: Array<() => void> = [];
+
+    // Query para chats onde o usuário é cliente
+    const qClient = query(
       collection(db, "chats"),
       where("participants.clientId", "==", currentUser.id)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const chatsData: Chat[] = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        chatsData.push({
-          id: doc.id,
-          clientId: data.participants.clientId,
-          workerId: data.participants.workerId,
-          status: data.status,
-          orderId: data.orderId,
-          clientName: data.clientName,
-          workerName: data.workerName
-        });
-      });
-      setChats(chatsData);
+    const unsubClient = onSnapshot(qClient, (snapshot) => {
+      handleSnapshot(snapshot);
+      console.log("Chats do cliente:", snapshot.docs.map(d => d.data()));
     });
 
-    return () => unsubscribe();
+    // Query para chats onde o usuário é worker
+    const qWorker = query(
+      collection(db, "chats"),
+      where("participants.workerId", "==", currentUser.id)
+    );
+
+    const unsubWorker = onSnapshot(qWorker, (snapshot) => {
+      handleSnapshot(snapshot);
+      console.log("Chats do worker:", snapshot.docs.map(d => d.data()));
+    });
+
+    unsubscribeCallbacks.push(unsubClient, unsubWorker);
+
+    return () => {
+      unsubscribeCallbacks.forEach(unsub => unsub());
+    };
   }, [currentUser]);
+
+  const handleSnapshot = (snapshot: QuerySnapshot<DocumentData>) => {
+    const newChats: Chat[] = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      newChats.push({
+        id: doc.id,
+        clientId: data.participants.clientId,
+        workerId: data.participants.workerId,
+        status: data.status,
+        orderId: data.orderId,
+        clientName: data.clientName,
+        workerName: data.workerName
+      });
+    });
+    
+    setChats(prev => [
+      ...prev.filter(p => !newChats.some(n => n.id === p.id)),
+      ...newChats
+    ]);
+  };
 
   useEffect(() => {
     if (!selectedChatId) return;
@@ -103,25 +122,30 @@ const ChatApp = () => {
           authorName: data.authorName
         });
       });
+      console.log("Mensagens recebidas:", messagesData);
       setMessages(messagesData);
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
   }, [selectedChatId]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedChatId || !currentUser) return;
 
     try {
-      await addDoc(collection(db, "chats", selectedChatId, "messages"), {
-        content: newMessage,
-        authorId: currentUser.id,
-        authorName: currentUser.name,
-        timestamp: Timestamp.now()
-      });
+      const docRef = await addDoc(
+        collection(db, "chats", selectedChatId, "messages"), 
+        {
+          content: newMessage,
+          authorId: currentUser.id,
+          authorName: currentUser.name,
+          timestamp: Timestamp.now()
+        }
+      );
+      console.log("Mensagem enviada com ID:", docRef.id);
       setNewMessage("");
     } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
+      console.error("Erro detalhado ao enviar mensagem:", error);
     }
   };
 
@@ -129,6 +153,18 @@ const ChatApp = () => {
     return currentUser?.id === chat.clientId 
       ? chat.workerName 
       : chat.clientName;
+  };
+
+  const formatTime = (timestamp: Timestamp) => {
+    try {
+      return timestamp.toDate().toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      console.error("Erro ao formatar timestamp:", e);
+      return "";
+    }
   };
 
   return (
@@ -152,7 +188,11 @@ const ChatApp = () => {
             >
               <p className="font-semibold">{getChatTitle(chat)}</p>
               <p className="text-sm">Ordem #{chat.orderId}</p>
-              <p className="text-sm text-gray-500">Status: {chat.status}</p>
+              <p className={`text-sm ${
+                chat.status === 'active' ? 'text-green-600' : 'text-red-600'
+              }`}>
+                Status: {chat.status === 'active' ? 'Ativo' : 'Fechado'}
+              </p>
             </div>
           ))}
         </div>
@@ -160,7 +200,7 @@ const ChatApp = () => {
 
       {/* Área do chat */}
       <div className="w-2/3 flex flex-col">
-        <div className="h-16 bg-gray-200 flex items-center px-4">
+        <div className="h-16 bg-gray-200 flex items-center px-4 border-b border-gray-300">
           <h2 className="text-xl font-bold">
             {selectedChatId 
               ? `Chat da Ordem #${chats.find(c => c.id === selectedChatId)?.orderId}`
@@ -169,6 +209,12 @@ const ChatApp = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 bg-white">
+          {messages.length === 0 && (
+            <div className="text-center text-gray-500 mt-4">
+              Nenhuma mensagem ainda. Seja o primeiro a enviar!
+            </div>
+          )}
+
           {messages.map((message) => (
             <div
               key={message.id}
@@ -183,28 +229,31 @@ const ChatApp = () => {
                     : "bg-gray-100"
                 }`}
               >
-                <p className="font-medium text-sm">{message.authorName}</p>
-                <p className="text-gray-800">{message.content}</p>
+                <p className="font-medium text-sm text-indigo-800">
+                  {message.authorName}
+                </p>
+                <p className="text-gray-800 break-words">{message.content}</p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {new Date(message.timestamp?.toDate()).toLocaleTimeString()}
+                  {formatTime(message.timestamp)}
                 </p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="h-16 bg-gray-200 flex items-center px-4">
+        <div className="h-16 bg-gray-200 flex items-center px-4 border-t border-gray-300">
           <input
             type="text"
-            className="flex-1 p-2 border rounded"
+            className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Digite sua mensagem..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           />
           <button
             onClick={handleSendMessage}
-            className="ml-2 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+            className="ml-2 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:opacity-50"
+            disabled={!newMessage.trim()}
           >
             Enviar
           </button>
