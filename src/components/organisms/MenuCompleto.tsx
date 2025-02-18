@@ -43,10 +43,13 @@ const MenuCompleto: React.FC = () => {
     router.push("/");
   };
 
+  // 🔹 Define o link correto para a logo baseado na role
+  const logoHref = user.role === "Worker" ? "/homeProfessional" : "/homeClient";
+
   return (
     <div className="flex h-20 items-center px-6 md:px-20 bg-black justify-between w-full">
       {/* Logo */}
-      <a href="/" className="flex items-center">
+      <a href={logoHref} className="flex items-center">
         <img src="/img/logo.svg" alt="Resolvi Logo" className="w-24 md:w-32 h-auto" />
       </a>
 
